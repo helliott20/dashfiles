@@ -5,6 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DashFiles - Simple File Hosting</title>
     <style>
+        :root {
+            /* Light theme colors */
+            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            --bg-container: rgba(255, 255, 255, 0.95);
+            --bg-upload-zone: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            --bg-upload-hover: rgba(102, 126, 234, 0.08);
+            --bg-result: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            --bg-disclaimer: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
+            --bg-qr: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-accent: #667eea;
+            --text-result: #059669;
+            --text-disclaimer: #ea580c;
+            --text-qr: #667eea;
+            
+            --border-primary: #d1d5db;
+            --border-result: rgba(16, 185, 129, 0.2);
+            --border-disclaimer: rgba(249, 115, 22, 0.2);
+            --border-qr: rgba(102, 126, 234, 0.2);
+            
+            --shadow-container: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-button: 0 8px 25px rgba(102, 126, 234, 0.4);
+            
+            --particle-color: rgba(102, 126, 234, 0.6);
+            --floating-shape: rgba(255, 255, 255, 0.1);
+            
+            /* Theme toggle specific */
+            --toggle-bg: rgba(30, 35, 50, 0.85);
+            --toggle-border: rgba(30, 35, 50, 0.9);
+            --toggle-icon: #f8fafc;
+            --toggle-shadow: 0 8px 25px rgba(30, 35, 50, 0.4);
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme colors */
+            --bg-primary: linear-gradient(135deg, #1a1b23 0%, #2d1b69 50%, #1a1b23 100%);
+            --bg-container: rgba(30, 35, 50, 0.95);
+            --bg-upload-zone: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
+            --bg-upload-hover: rgba(102, 126, 234, 0.15);
+            --bg-result: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
+            --bg-disclaimer: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.08));
+            --bg-qr: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(102, 126, 234, 0.08));
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-accent: #818cf8;
+            --text-result: #34d399;
+            --text-disclaimer: #fb923c;
+            --text-qr: #818cf8;
+            
+            --border-primary: #374151;
+            --border-result: rgba(16, 185, 129, 0.3);
+            --border-disclaimer: rgba(249, 115, 22, 0.3);
+            --border-qr: rgba(102, 126, 234, 0.3);
+            
+            --shadow-container: 0 25px 50px rgba(0, 0, 0, 0.4);
+            --shadow-button: 0 8px 25px rgba(129, 140, 248, 0.4);
+            
+            --particle-color: rgba(129, 140, 248, 0.7);
+            --floating-shape: rgba(102, 126, 234, 0.1);
+            
+            /* Theme toggle specific */
+            --toggle-bg: rgba(30, 35, 50, 0.8);
+            --toggle-border: rgba(129, 140, 248, 0.3);
+            --toggle-icon: #818cf8;
+            --toggle-shadow: 0 8px 25px rgba(129, 140, 248, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +83,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            background: var(--bg-primary);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
@@ -21,13 +91,136 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        /* Theme Toggle Button Styles */
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--toggle-border);
+            border-radius: 50%;
+            background: var(--toggle-bg);
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--toggle-shadow);
+            z-index: 1000;
+            outline: none;
+            overflow: hidden;
+            animation: themeButtonEntrance 1s ease-out 2s both;
+        }
+
+        @keyframes themeButtonEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.8);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--text-accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.3);
+            border-color: var(--text-accent);
+        }
+
+        .theme-toggle:hover::before {
+            opacity: 0.1;
+        }
+
+        .theme-toggle:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .theme-indicator {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            fill: var(--toggle-icon);
+            stroke: var(--toggle-icon);
+            stroke-width: 2;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        .moon-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        .theme-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--text-accent) 0%, transparent 70%);
+            opacity: 0.6;
+            animation: themeRippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes themeRippleEffect {
+            0% {
+                transform: scale(0);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
 
         /* Enhanced background elements */
@@ -44,9 +237,10 @@
         .floating-shape {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--floating-shape);
             backdrop-filter: blur(5px);
             animation: floatRandom 20s infinite ease-in-out;
+            transition: background 0.8s ease;
         }
 
         .floating-shape:nth-child(1) {
@@ -101,18 +295,17 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg-container);
             backdrop-filter: blur(20px);
             border-radius: 32px;
             padding: 50px;
             max-width: 650px;
             width: 100%;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-container);
             animation: containerEntrance 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .container::before {
@@ -124,6 +317,11 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             animation: shimmer 3s infinite;
+        }
+
+        [data-theme="dark"] .container::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: shimmer 6s infinite;
         }
 
         @keyframes shimmer {
@@ -181,12 +379,17 @@
             50% { background-position: 100% 50%; }
         }
 
+        [data-theme="dark"] .logo h1 {
+            animation: textShimmer 8s ease-in-out infinite;
+        }
+
         .logo p {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 1.2rem;
             font-weight: 500;
             opacity: 0;
             animation: fadeInUp 1s ease-out 0.8s both;
+            transition: color 0.8s ease;
         }
 
         @keyframes fadeInUp {
@@ -201,7 +404,7 @@
         }
 
         .upload-zone {
-            border: 2px dashed #d1d5db;
+            border: 2px dashed var(--border-primary);
             border-radius: 24px;
             padding: 70px 50px;
             text-align: center;
@@ -211,7 +414,7 @@
             position: relative;
             overflow: hidden;
             animation: uploadZoneEntrance 1.2s ease-out 0.6s both;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: var(--bg-upload-zone);
         }
 
         .upload-zone.hidden {
@@ -241,32 +444,32 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--particle-color) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
         }
 
         .upload-zone:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.08);
+            border-color: var(--text-accent);
+            background: var(--bg-upload-hover);
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
         }
 
         .upload-zone:hover::before {
-            opacity: 1;
+            opacity: 0.1;
         }
 
         .upload-zone.dragover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.15);
+            border-color: var(--text-accent);
+            background: var(--bg-upload-hover);
             transform: scale(1.05);
             box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3);
         }
 
         .upload-zone.dragover::before {
-            opacity: 1;
+            opacity: 0.15;
         }
 
         .upload-icon {
@@ -280,7 +483,7 @@
             justify-content: center;
             animation: iconFloat 4s ease-in-out infinite;
             position: relative;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: var(--shadow-button);
             transition: all 0.4s ease;
         }
 
@@ -349,21 +552,22 @@
 
         .upload-text h3 {
             font-size: 1.8rem;
-            color: #1f2937;
+            color: var(--text-primary);
             margin-bottom: 12px;
             font-weight: 700;
-            transition: color 0.3s ease;
+            transition: all 0.8s ease;
         }
 
         .upload-zone:hover .upload-text h3 {
-            color: #667eea;
+            color: var(--text-accent);
         }
 
         .upload-text p {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 1.1rem;
             margin-bottom: 30px;
             font-weight: 500;
+            transition: color 0.8s ease;
         }
 
         .file-input {
@@ -380,7 +584,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: var(--shadow-button);
             position: relative;
             overflow: hidden;
         }
@@ -433,6 +637,8 @@
             border-radius: 8px;
             overflow: hidden;
             position: relative;
+            border: 1px solid var(--border-primary);
+            transition: all 0.8s ease;
         }
 
         .progress-bar::before {
@@ -444,6 +650,11 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             animation: progressShimmer 2s infinite;
+        }
+
+        [data-theme="dark"] .progress-bar::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: progressShimmer 4s infinite;
         }
 
         @keyframes progressShimmer {
@@ -472,6 +683,11 @@
             animation: fillShimmer 1.5s infinite;
         }
 
+        [data-theme="dark"] .progress-fill::after {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: fillShimmer 3s infinite;
+        }
+
         @keyframes fillShimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
@@ -481,13 +697,13 @@
             display: none;
             margin-top: 20px;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
-            border: 2px solid rgba(16, 185, 129, 0.2);
+            background: var(--bg-result);
+            border: 2px solid var(--border-result);
             border-radius: 20px;
             animation: resultEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            transition: all 0.5s ease;
+            transition: all 0.8s ease;
         }
 
         .result-container::before {
@@ -507,6 +723,10 @@
             50% { background-position: 100% 50%; }
         }
 
+        [data-theme="dark"] .result-container::before {
+            animation: borderShimmer 4s infinite;
+        }
+
         @keyframes resultEntrance {
             0% {
                 opacity: 0;
@@ -521,13 +741,14 @@
         }
 
         .result-title {
-            color: #059669;
+            color: var(--text-result);
             font-weight: 700;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 12px;
             font-size: 1.2rem;
+            transition: color 0.8s ease;
         }
 
         .result-title svg {
@@ -550,20 +771,21 @@
         }
 
         .result-link {
-            background: white;
+            background: var(--bg-container);
             padding: 16px;
             border-radius: 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-primary);
             font-family: 'Fira Code', monospace;
             font-size: 0.95rem;
             word-break: break-all;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.8s ease;
             position: relative;
+            color: var(--text-primary);
         }
 
         .result-link:hover {
-            border-color: #059669;
+            border-color: var(--text-result);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
@@ -605,8 +827,8 @@
         .qr-section {
             margin-top: 25px;
             padding: 25px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            background: var(--bg-qr);
+            border: 2px solid var(--border-qr);
             border-radius: 16px;
             text-align: center;
             position: relative;
@@ -614,6 +836,7 @@
             opacity: 0;
             transform: translateY(20px);
             animation: qrSectionEntrance 0.8s ease-out 0.3s both;
+            transition: all 0.8s ease;
         }
 
         @keyframes qrSectionEntrance {
@@ -644,8 +867,12 @@
             50% { background-position: 100% 50%; }
         }
 
+        [data-theme="dark"] .qr-section::before {
+            animation: qrBorderFlow 6s infinite;
+        }
+
         .qr-title {
-            color: #667eea;
+            color: var(--text-qr);
             font-weight: 700;
             margin-bottom: 15px;
             display: flex;
@@ -653,6 +880,7 @@
             justify-content: center;
             gap: 10px;
             font-size: 1.1rem;
+            transition: color 0.8s ease;
         }
 
         .qr-title svg {
@@ -666,7 +894,7 @@
         }
 
         .qr-container {
-            background: white;
+            background: var(--bg-container);
             border-radius: 12px;
             padding: 20px;
             margin: 0 auto 15px;
@@ -674,6 +902,7 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
             position: relative;
             overflow: hidden;
+            transition: all 0.8s ease;
         }
 
         .qr-container::before {
@@ -683,14 +912,14 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--particle-color) 0%, transparent 70%);
             animation: qrGlow 4s ease-in-out infinite;
             pointer-events: none;
         }
 
         @keyframes qrGlow {
             0%, 100% { opacity: 0; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+            50% { opacity: 0.1; transform: scale(1.2); }
         }
 
         #qrcode {
@@ -708,10 +937,15 @@
         }
 
         .qr-instruction {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 0.95rem;
             font-weight: 500;
             animation: qrInstructionPulse 3s ease-in-out infinite;
+            transition: color 0.8s ease;
+        }
+
+        [data-theme="dark"] .qr-instruction {
+            animation: qrInstructionPulse 6s ease-in-out infinite;
         }
 
         @keyframes qrInstructionPulse {
@@ -721,10 +955,15 @@
 
         .qr-building {
             display: none;
-            color: #667eea;
+            color: var(--text-qr);
             font-weight: 600;
             margin: 20px 0;
             animation: buildingAnimation 1s ease-in-out infinite;
+            transition: color 0.8s ease;
+        }
+
+        [data-theme="dark"] .qr-building {
+            animation: buildingAnimation 2s ease-in-out infinite;
         }
 
         @keyframes buildingAnimation {
@@ -743,10 +982,11 @@
 
         .qr-pixel {
             position: absolute;
-            background: #667eea;
+            background: var(--text-accent);
             opacity: 0;
             animation: pixelAppear 0.1s ease-out forwards;
             border-radius: 1px;
+            transition: background 0.6s ease;
         }
 
         @keyframes pixelAppear {
@@ -780,14 +1020,14 @@
         .disclaimer {
             margin-top: 40px;
             padding: 25px;
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
-            border: 2px solid rgba(249, 115, 22, 0.2);
+            background: var(--bg-disclaimer);
+            border: 2px solid var(--border-disclaimer);
             border-radius: 16px;
             font-size: 0.95rem;
-            color: #ea580c;
+            color: var(--text-disclaimer);
             font-weight: 500;
             animation: disclaimerEntrance 1s ease-out 1.5s both;
-            transition: all 0.5s ease;
+            transition: all 0.8s ease;
         }
 
         .disclaimer.compact {
@@ -810,9 +1050,10 @@
         .footer {
             margin-top: 50px;
             text-align: center;
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 1rem;
             animation: footerEntrance 1s ease-out 1.8s both;
+            transition: color 0.8s ease;
         }
 
         @keyframes footerEntrance {
@@ -827,11 +1068,11 @@
         }
 
         .footer a {
-            color: #667eea;
+            color: var(--text-accent);
             text-decoration: none;
             margin: 0 15px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.8s ease;
             position: relative;
         }
 
@@ -873,15 +1114,21 @@
             }
         }
 
+        .loading p {
+            color: var(--text-secondary);
+            transition: color 0.8s ease;
+        }
+
         .spinner {
             width: 40px;
             height: 40px;
             border: 4px solid rgba(102, 126, 234, 0.2);
-            border-top: 4px solid #667eea;
+            border-top: 4px solid var(--text-accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 15px;
             position: relative;
+            transition: border-color 0.8s ease;
         }
 
         .spinner::after {
@@ -892,7 +1139,7 @@
             right: -4px;
             bottom: -4px;
             border: 4px solid transparent;
-            border-top: 4px solid rgba(102, 126, 234, 0.3);
+            border-top: 4px solid var(--particle-color);
             border-radius: 50%;
             animation: spin 2s linear infinite reverse;
         }
@@ -927,7 +1174,24 @@
             }
         }
 
+        @keyframes trailFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
         @media (max-width: 768px) {
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
+
             .container {
                 padding: 40px 30px;
                 margin: 15px;
@@ -954,6 +1218,16 @@
         }
 
         @media (max-width: 480px) {
+            .theme-toggle {
+                width: 45px;
+                height: 45px;
+            }
+
+            .theme-icon {
+                width: 18px;
+                height: 18px;
+            }
+
             .container {
                 padding: 30px 20px;
             }
@@ -966,6 +1240,14 @@
                 font-size: 2rem;
             }
         }
+
+        /* Theme transition effects */
+        * {
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                        color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body>
@@ -977,6 +1259,18 @@
     </div>
 
     <div class="container">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme(event)" onkeydown="handleThemeKeydown(event)" tabindex="0" aria-label="Toggle dark/light mode">
+            <div class="theme-indicator">
+                <svg class="theme-icon sun-icon" viewBox="0 0 24 24">
+                    <path d="M12 17.5C15.0376 17.5 17.5 15.0376 17.5 12C17.5 8.96243 15.0376 6.5 12 6.5C8.96243 6.5 6.5 8.96243 6.5 12C6.5 15.0376 8.96243 17.5 12 17.5Z"/>
+                    <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22"/>
+                </svg>
+                <svg class="theme-icon moon-icon" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79Z"/>
+                </svg>
+            </div>
+        </button>
+
         <div class="logo">
             <h1>DashFiles</h1>
             <p>Simple, fast, and secure file hosting</p>
@@ -1046,6 +1340,90 @@
     </div>
 
     <script>
+        // Theme Management with persistence
+        let currentTheme = localStorage.getItem('dashfiles-theme') || 'light';
+        
+        // Apply saved theme on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateParticleColors();
+        });
+        
+        function toggleTheme(event) {
+            // Create ripple effect
+            createThemeRipple(event);
+            
+            // Toggle theme
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            // Save to localStorage
+            localStorage.setItem('dashfiles-theme', currentTheme);
+            
+            // Add transition class for smooth change
+            document.body.style.filter = 'blur(2px)';
+            document.body.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                
+                // Update particle colors
+                updateParticleColors();
+                
+                // Regenerate QR code if one exists
+                const qrElement = document.getElementById('qrcode');
+                const resultLink = document.getElementById('resultLink');
+                if (qrElement && qrElement.innerHTML && resultLink.textContent) {
+                    setTimeout(() => {
+                        generateAnimatedQRCode(resultLink.textContent);
+                    }, 400);
+                }
+                
+                // Smooth transition back
+                setTimeout(() => {
+                    document.body.style.filter = 'blur(0)';
+                    document.body.style.transform = 'scale(1)';
+                }, 100);
+            }, 200);
+        }
+
+        function createThemeRipple(event) {
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const ripple = document.createElement('div');
+            
+            ripple.className = 'theme-ripple';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
+            
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        function handleThemeKeydown(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleTheme(event);
+            }
+        }
+
+        function updateParticleColors() {
+            const particles = document.querySelectorAll('.advanced-particle, .qr-pixel');
+            particles.forEach(particle => {
+                if (currentTheme === 'dark') {
+                    particle.style.background = 'hsla(230, 70%, 70%, 0.7)';
+                    particle.style.boxShadow = '0 0 6px hsla(230, 70%, 70%, 0.3)';
+                } else {
+                    particle.style.background = 'hsla(230, 70%, 60%, 0.6)';
+                    particle.style.boxShadow = '0 0 4px hsla(230, 70%, 60%, 0.3)';
+                }
+            });
+        }
+
         // Configuration
         const CONFIG = {
             API_ENDPOINT: 'https://api.dashfiles.co',
@@ -1311,8 +1689,13 @@
             qrElement.innerHTML = '';
             
             try {
-                // Create QR code using Google Charts API (more reliable)
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=1f2937&margin=10&format=png`;
+                // Get appropriate colors for current theme
+                const isDark = currentTheme === 'dark';
+                const bgColor = isDark ? '1e2332' : 'ffffff';
+                const fgColor = isDark ? 'f8fafc' : '1f2937';
+                
+                // Create QR code with theme-appropriate colors
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&bgcolor=${bgColor}&color=${fgColor}&margin=10&format=png`;
                 
                 // Create image element
                 const img = document.createElement('img');
@@ -1356,16 +1739,16 @@
             overlay.style.height = '180px';
             qrContainer.appendChild(overlay);
             
-            // Create animated pixels
-            const pixelCount = 400; // Number of pixels to animate
+            // Create animated pixels with theme-appropriate colors
+            const pixelCount = 400;
             const pixels = [];
             
             // Generate pixel positions
             for (let i = 0; i < pixelCount; i++) {
                 pixels.push({
-                    x: Math.random() * 160 + 10, // 160px with 10px margin
+                    x: Math.random() * 160 + 10,
                     y: Math.random() * 160 + 10,
-                    delay: Math.random() * 800 // Random delay up to 800ms
+                    delay: Math.random() * 800
                 });
             }
             
@@ -1379,6 +1762,16 @@
                     pixelDiv.style.width = '3px';
                     pixelDiv.style.height = '3px';
                     pixelDiv.style.animationDelay = '0s';
+                    
+                    // Set theme-appropriate color
+                    if (currentTheme === 'dark') {
+                        pixelDiv.style.background = '#818cf8';
+                        pixelDiv.style.boxShadow = '0 0 6px rgba(129, 140, 248, 0.4)';
+                    } else {
+                        pixelDiv.style.background = '#667eea';
+                        pixelDiv.style.boxShadow = '0 0 4px rgba(102, 126, 234, 0.3)';
+                    }
+                    
                     overlay.appendChild(pixelDiv);
                 }, pixel.delay);
             });
@@ -1399,18 +1792,20 @@
         function createAdvancedParticle() {
             const particle = document.createElement('div');
             const size = Math.random() * 6 + 2;
-            const hue = Math.random() * 60 + 200; // Blue to purple range
+            const hue = currentTheme === 'dark' ? 230 : 220; // Adjust hue based on theme
+            const saturation = currentTheme === 'dark' ? 70 : 60;
+            const lightness = currentTheme === 'dark' ? 70 : 60;
             
             particle.className = 'advanced-particle';
             particle.style.cssText = `
                 width: ${size}px;
                 height: ${size}px;
-                background: hsla(${hue}, 70%, 60%, 0.6);
+                background: hsla(${hue}, ${saturation}%, ${lightness}%, 0.6);
                 left: ${Math.random() * window.innerWidth}px;
                 top: 100vh;
                 --random-x: ${(Math.random() - 0.5) * 200}px;
                 animation: advancedFloat ${8 + Math.random() * 4}s linear forwards;
-                box-shadow: 0 0 ${size * 2}px hsla(${hue}, 70%, 60%, 0.3);
+                box-shadow: 0 0 ${size * 2}px hsla(${hue}, ${saturation}%, ${lightness}%, 0.3);
             `;
             
             document.body.appendChild(particle);
@@ -1434,13 +1829,17 @@
             // Create trail particle occasionally
             if (Math.random() < 0.1) {
                 const trail = document.createElement('div');
+                const trailColor = currentTheme === 'dark' ? 
+                    'rgba(129, 140, 248, 0.5)' : 
+                    'rgba(102, 126, 234, 0.4)';
+                
                 trail.style.cssText = `
                     position: fixed;
                     left: ${e.clientX}px;
                     top: ${e.clientY}px;
                     width: 3px;
                     height: 3px;
-                    background: rgba(102, 126, 234, 0.4);
+                    background: ${trailColor};
                     border-radius: 50%;
                     pointer-events: none;
                     z-index: -1;
@@ -1451,16 +1850,6 @@
                 setTimeout(() => trail.remove(), 500);
             }
         });
-
-        // Add trail fade animation
-        const trailStyle = document.createElement('style');
-        trailStyle.textContent = `
-            @keyframes trailFade {
-                0% { opacity: 1; transform: scale(1); }
-                100% { opacity: 0; transform: scale(0); }
-            }
-        `;
-        document.head.appendChild(trailStyle);
 
         // Add loading screen effect
         window.addEventListener('load', () => {
