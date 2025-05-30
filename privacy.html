@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - DashFiles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        .content {
+            color: #374151;
+        }
+
+        h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 30px 0 15px 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        ul {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f97316;
+            margin: 20px 0;
+        }
+
+        .important {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #ef4444;
+            margin: 20px 0;
+        }
+
+        .good-to-know {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            Back to DashFiles
+        </a>
+
+        <div class="header">
+            <h1>Terms of Service</h1>
+            <p>Rules and guidelines for using DashFiles</p>
+        </div>
+
+        <div class="content">
+            <div class="important">
+                <strong>Important:</strong> By using DashFiles, you agree to these terms. If you don't agree, please don't use our service. This service is provided "as-is" with no guarantees of availability or data retention.
+            </div>
+
+            <h2>1. Acceptance of Terms</h2>
+
+            <p>By accessing or using DashFiles, you agree to be bound by these Terms of Service and our Privacy Policy. If you disagree with any part of these terms, you may not use our service.</p>
+
+            <h2>2. Description of Service</h2>
+
+            <p>DashFiles is a temporary file hosting service that allows users to upload and share files via unique URLs. The service is provided free of charge and is intended for temporary file sharing purposes only.</p>
+
+            <div class="highlight">
+                <strong>Key Service Characteristics:</strong>
+                <ul>
+                    <li>Temporary file storage (files may be deleted at any time)</li>
+                    <li>No user accounts or registration required</li>
+                    <li>File sharing via unique URLs</li>
+                    <li>No guaranteed uptime or availability</li>
+                </ul>
+            </div>
+
+            <h2>3. Acceptable Use Policy</h2>
+
+            <h3>You May Use DashFiles To:</h3>
+            <ul>
+                <li>Share legitimate files for personal or business purposes</li>
+                <li>Temporarily host files for distribution</li>
+                <li>Share files that you own or have permission to distribute</li>
+            </ul>
+
+            <h3>You May NOT Use DashFiles To:</h3>
+            <ul>
+                <li>Upload, store, or share illegal content</li>
+                <li>Distribute copyrighted material without permission</li>
+                <li>Share malware, viruses, or malicious code</li>
+                <li>Host adult content, hate speech, or harassment materials</li>
+                <li>Distribute personal information of others without consent</li>
+                <li>Engage in any activity that could harm or overload our systems</li>
+                <li>Use the service for commercial purposes beyond normal business file sharing</li>
+                <li>Attempt to reverse engineer or exploit the service</li>
+            </ul>
+
+            <h2>4. File Management and Deletion</h2>
+
+            <div class="important">
+                <strong>Critical Warning:</strong> Files uploaded to DashFiles may be deleted at any time without notice. We do not guarantee any specific retention period and are not responsible for data loss.
+            </div>
+
+            <p>We reserve the right to delete files:</p>
+            <ul>
+                <li>At any time for any reason</li>
+                <li>For violating these terms</li>
+                <li>For security or legal compliance</li>
+                <li>To manage server capacity</li>
+                <li>After periods of inactivity</li>
+            </ul>
+
+            <h2>5. User Responsibilities</h2>
+
+            <p>As a user of DashFiles, you are responsible for:</p>
+            <ul>
+                <li>Ensuring you have the right to upload and share your files</li>
+                <li>Maintaining your own backups of important files</li>
+                <li>Using the service in compliance with applicable laws</li>
+                <li>Protecting your file URLs and sharing them responsibly</li>
+                <li>Not overloading our systems with excessive usage</li>
+            </ul>
+
+            <h2>6. Intellectual Property</h2>
+
+            <p>You retain ownership of files you upload. By uploading files, you grant us a limited license to store, reproduce, and distribute your files solely for the purpose of providing the service.</p>
+
+            <p>The DashFiles service, including its design, code, and branding, is protected by intellectual property laws.</p>
+
+            <h2>7. Privacy and Data Protection</h2>
+
+            <p>Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.</p>
+
+            <div class="good-to-know">
+                <strong>Remember:</strong> Anyone with access to your file URLs can download your files. Only share URLs with intended recipients.
+            </div>
+
+            <h2>8. Disclaimers and Limitations</h2>
+
+            <h3>Service Availability</h3>
+            <p>DashFiles is provided "as-is" without warranties of any kind. We do not guarantee:</p>
+            <ul>
+                <li>Continuous service availability</li>
+                <li>File accessibility or retention</li>
+                <li>Error-free operation</li>
+                <li>Security from unauthorized access</li>
+            </ul>
+
+            <h3>Limitation of Liability</h3>
+            <p>To the maximum extent permitted by law, we shall not be liable for:</p>
+            <ul>
+                <li>Any data loss or corruption</li>
+                <li>Service interruptions or downtime</li>
+                <li>Security breaches or unauthorized access</li>
+                <li>Any indirect, incidental, or consequential damages</li>
+            </ul>
+
+            <h2>9. Indemnification</h2>
+
+            <p>You agree to indemnify and hold us harmless from any claims, damages, or expenses arising from:</p>
+            <ul>
+                <li>Your use of the service</li>
+                <li>Your violation of these terms</li>
+                <li>Your violation of any third-party rights</li>
+                <li>Content you upload or share</li>
+            </ul>
+
+            <h2>10. Content Monitoring and Removal</h2>
+
+            <p>While we don't actively monitor uploaded content, we reserve the right to:</p>
+            <ul>
+                <li>Remove content that violates these terms</li>
+                <li>Investigate reported violations</li>
+                <li>Cooperate with law enforcement when required</li>
+                <li>Terminate access for repeat violators</li>
+            </ul>
+
+            <h2>11. Age Restrictions</h2>
+
+            <p>DashFiles is not intended for users under 13 years of age. Users between 13 and 18 should have parental or guardian consent before using the service.</p>
+
+            <h2>12. International Use</h2>
+
+            <p>DashFiles may be accessed from various countries. You are responsible for ensuring your use complies with local laws and regulations in your jurisdiction.</p>
+
+            <h2>13. Service Modifications</h2>
+
+            <p>We reserve the right to:</p>
+            <ul>
+                <li>Modify or discontinue the service at any time</li>
+                <li>Change features, functionality, or capacity limits</li>
+                <li>Update these terms as needed</li>
+            </ul>
+
+            <h2>14. Termination</h2>
+
+            <p>We may terminate or suspend your access to DashFiles at any time for:</p>
+            <ul>
+                <li>Violation of these terms</li>
+                <li>Suspected illegal activity</li>
+                <li>Abuse of the service</li>
+                <li>Any reason at our sole discretion</li>
+            </ul>
+
+            <h2>15. Governing Law</h2>
+
+            <p>These terms are governed by the laws of the jurisdiction where DashFiles operates. Any disputes will be resolved in appropriate courts of that jurisdiction.</p>
+
+            <h2>16. Severability</h2>
+
+            <p>If any provision of these terms is found to be unenforceable, the remaining provisions will continue in full force and effect.</p>
+
+            <h2>17. Changes to Terms</h2>
+
+            <p>We may update these terms from time to time. Continued use of the service after changes constitutes acceptance of the new terms. We recommend reviewing these terms periodically.</p>
+
+            <h2>18. Contact and Enforcement</h2>
+
+            <p>If you believe content on DashFiles violates these terms or applicable laws, please report it through our service channels. We will investigate and take appropriate action.</p>
+
+            <div class="highlight">
+                <strong>Final Reminder:</strong> DashFiles is a temporary file sharing service. Always maintain backups of important files and use the service responsibly.
+            </div>
+        </div>
+
+        <div class="last-updated">
+            Last updated: May 30, 2025
+        </div>
+    </div>
+</body>
+</html>
