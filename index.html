@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DashFiles - Simple File Hosting</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -1282,22 +1281,29 @@
             qrElement.innerHTML = '';
             
             try {
-                // Generate QR code with high quality settings
-                await QRCode.toCanvas(qrElement, url, {
-                    width: 180,
-                    height: 180,
-                    margin: 2,
-                    color: {
-                        dark: '#1f2937',
-                        light: '#ffffff'
-                    },
-                    errorCorrectionLevel: 'M'
-                });
+                // Create QR code using Google Charts API (more reliable)
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=1f2937&margin=10&format=png`;
                 
-                // Start the pixel-by-pixel animation
-                setTimeout(() => {
-                    animateQRCodeReveal();
-                }, 300);
+                // Create image element
+                const img = document.createElement('img');
+                img.src = qrUrl;
+                img.style.width = '180px';
+                img.style.height = '180px';
+                img.style.borderRadius = '8px';
+                img.style.opacity = '0';
+                
+                // Handle successful load
+                img.onload = () => {
+                    qrElement.appendChild(img);
+                    setTimeout(() => {
+                        animateQRCodeReveal(img);
+                    }, 300);
+                };
+                
+                // Handle error
+                img.onerror = () => {
+                    throw new Error('Failed to generate QR code');
+                };
                 
             } catch (error) {
                 console.error('QR Code generation failed:', error);
@@ -1308,47 +1314,30 @@
             }
         }
 
-        function animateQRCodeReveal() {
-            const canvas = document.querySelector('#qrcode canvas');
-            if (!canvas) return;
-            
-            // Hide the canvas initially
-            canvas.style.opacity = '0';
+        function animateQRCodeReveal(img) {
+            // Hide building message
+            qrBuilding.style.display = 'none';
+            qrContainer.style.opacity = '1';
             
             // Create overlay for pixel animation
             const overlay = document.createElement('div');
             overlay.className = 'qr-pixels';
-            overlay.style.width = canvas.width + 'px';
-            overlay.style.height = canvas.height + 'px';
+            overlay.style.width = '180px';
+            overlay.style.height = '180px';
             qrContainer.appendChild(overlay);
             
-            // Get canvas data for pixel mapping
-            const ctx = canvas.getContext('2d');
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // Create animated pixels
+            const pixelCount = 400; // Number of pixels to animate
             const pixels = [];
             
-            // Sample pixels at a lower resolution for animation
-            const sampleRate = 6; // Every 6th pixel
-            for (let y = 0; y < canvas.height; y += sampleRate) {
-                for (let x = 0; x < canvas.width; x += sampleRate) {
-                    const index = (y * canvas.width + x) * 4;
-                    const r = imageData.data[index];
-                    const g = imageData.data[index + 1];
-                    const b = imageData.data[index + 2];
-                    
-                    // If pixel is dark (part of QR code)
-                    if (r < 128 && g < 128 && b < 128) {
-                        pixels.push({ x, y });
-                    }
-                }
+            // Generate pixel positions
+            for (let i = 0; i < pixelCount; i++) {
+                pixels.push({
+                    x: Math.random() * 160 + 10, // 160px with 10px margin
+                    y: Math.random() * 160 + 10,
+                    delay: Math.random() * 800 // Random delay up to 800ms
+                });
             }
-            
-            // Shuffle pixels for random appearance
-            pixels.sort(() => Math.random() - 0.5);
-            
-            // Hide building message
-            qrBuilding.style.display = 'none';
-            qrContainer.style.opacity = '1';
             
             // Animate pixels appearing
             pixels.forEach((pixel, index) => {
@@ -1357,23 +1346,23 @@
                     pixelDiv.className = 'qr-pixel';
                     pixelDiv.style.left = pixel.x + 'px';
                     pixelDiv.style.top = pixel.y + 'px';
-                    pixelDiv.style.width = sampleRate + 'px';
-                    pixelDiv.style.height = sampleRate + 'px';
+                    pixelDiv.style.width = '3px';
+                    pixelDiv.style.height = '3px';
                     pixelDiv.style.animationDelay = '0s';
                     overlay.appendChild(pixelDiv);
-                    
-                    // Remove pixel overlay and show canvas when animation completes
-                    if (index === pixels.length - 1) {
-                        setTimeout(() => {
-                            canvas.style.opacity = '1';
-                            canvas.style.animation = 'qrCodeFinalReveal 0.5s ease-out';
-                            setTimeout(() => {
-                                overlay.remove();
-                            }, 500);
-                        }, 100);
-                    }
-                }, index * 2); // 2ms delay between each pixel
+                }, pixel.delay);
             });
+            
+            // Show final QR code after pixel animation
+            setTimeout(() => {
+                img.style.opacity = '1';
+                img.style.animation = 'qrCodeFinalReveal 0.6s ease-out';
+                
+                // Remove pixel overlay
+                setTimeout(() => {
+                    overlay.remove();
+                }, 600);
+            }, 1000);
         }
 
         // Enhanced particle system
