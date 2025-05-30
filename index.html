@@ -205,13 +205,22 @@
             border-radius: 24px;
             padding: 70px 50px;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             margin-bottom: 40px;
             position: relative;
             overflow: hidden;
             animation: uploadZoneEntrance 1.2s ease-out 0.6s both;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        }
+
+        .upload-zone.hidden {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.95);
+            max-height: 0;
+            padding: 0 50px;
+            margin-bottom: 0;
+            pointer-events: none;
         }
 
         @keyframes uploadZoneEntrance {
@@ -470,7 +479,7 @@
 
         .result-container {
             display: none;
-            margin-top: 40px;
+            margin-top: 20px;
             padding: 30px;
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
             border: 2px solid rgba(16, 185, 129, 0.2);
@@ -478,6 +487,7 @@
             animation: resultEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            transition: all 0.5s ease;
         }
 
         .result-container::before {
@@ -777,6 +787,13 @@
             color: #ea580c;
             font-weight: 500;
             animation: disclaimerEntrance 1s ease-out 1.5s both;
+            transition: all 0.5s ease;
+        }
+
+        .disclaimer.compact {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.9rem;
         }
 
         @keyframes disclaimerEntrance {
@@ -1045,6 +1062,7 @@
         const qrSection = document.getElementById('qrSection');
         const qrBuilding = document.getElementById('qrBuilding');
         const qrContainer = document.getElementById('qrContainer');
+        const disclaimer = document.querySelector('.disclaimer');
 
         // Enhanced drag and drop functionality
         uploadZone.addEventListener('dragover', (e) => {
@@ -1133,6 +1151,13 @@
                             progressContainer.style.display = 'none';
                             resultLink.textContent = shareUrl;
                             resultContainer.style.display = 'block';
+                            
+                            // Hide upload zone to show results clearly
+                            setTimeout(() => {
+                                uploadZone.classList.add('hidden');
+                                disclaimer.classList.add('compact');
+                            }, 300);
+                            
                             createSuccessParticles();
                             generateAnimatedQRCode(shareUrl);
                             resolve();
@@ -1256,11 +1281,16 @@
         }
 
         function resetUpload() {
+            // Hide results first
             resultContainer.style.display = 'none';
             progressContainer.style.display = 'none';
             loading.style.display = 'none';
             progressFill.style.width = '0%';
             fileInput.value = '';
+            
+            // Show upload zone again with smooth animation
+            uploadZone.classList.remove('hidden');
+            disclaimer.classList.remove('compact');
             
             // Reset QR code
             qrSection.style.opacity = '0';
