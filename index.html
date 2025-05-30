@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DashFiles - Simple File Hosting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -592,6 +593,181 @@
             left: 100%;
         }
 
+        .qr-section {
+            margin-top: 25px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: qrSectionEntrance 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes qrSectionEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .qr-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: qrBorderFlow 3s infinite;
+        }
+
+        @keyframes qrBorderFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .qr-title {
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .qr-title svg {
+            animation: phoneWiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes phoneWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .qr-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 auto 15px;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: qrGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes qrGlow {
+            0%, 100% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        #qrcode {
+            position: relative;
+            z-index: 1;
+        }
+
+        #qrcode canvas {
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .qr-container:hover #qrcode canvas {
+            transform: scale(1.05);
+        }
+
+        .qr-instruction {
+            color: #6b7280;
+            font-size: 0.95rem;
+            font-weight: 500;
+            animation: qrInstructionPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes qrInstructionPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .qr-building {
+            display: none;
+            color: #667eea;
+            font-weight: 600;
+            margin: 20px 0;
+            animation: buildingAnimation 1s ease-in-out infinite;
+        }
+
+        @keyframes buildingAnimation {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .qr-pixels {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .qr-pixel {
+            position: absolute;
+            background: #667eea;
+            opacity: 0;
+            animation: pixelAppear 0.1s ease-out forwards;
+            border-radius: 1px;
+        }
+
+        @keyframes pixelAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(45deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(22.5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes qrCodeFinalReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+
         .disclaimer {
             margin-top: 40px;
             padding: 25px;
@@ -827,6 +1003,20 @@
             <div class="result-link" id="resultLink"></div>
             <button class="copy-btn" onclick="copyToClipboard()">Copy Link</button>
             <button class="copy-btn" onclick="resetUpload()">Upload Another</button>
+            
+            <div class="qr-section" id="qrSection">
+                <div class="qr-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.1 5.9,23 7,23H17C18.1,23 19,22.1 19,21V3C19,1.89 18.1,1 17,1Z"/>
+                    </svg>
+                    Scan with your phone
+                </div>
+                <div class="qr-building" id="qrBuilding">🔧 Building QR code...</div>
+                <div class="qr-container" id="qrContainer">
+                    <div id="qrcode"></div>
+                </div>
+                <div class="qr-instruction">Point your camera at the QR code to download the file</div>
+            </div>
         </div>
 
         <div class="disclaimer">
@@ -853,6 +1043,9 @@
         const loading = document.getElementById('loading');
         const resultContainer = document.getElementById('resultContainer');
         const resultLink = document.getElementById('resultLink');
+        const qrSection = document.getElementById('qrSection');
+        const qrBuilding = document.getElementById('qrBuilding');
+        const qrContainer = document.getElementById('qrContainer');
 
         // Enhanced drag and drop functionality
         uploadZone.addEventListener('dragover', (e) => {
@@ -942,6 +1135,7 @@
                             resultLink.textContent = shareUrl;
                             resultContainer.style.display = 'block';
                             createSuccessParticles();
+                            generateAnimatedQRCode(shareUrl);
                             resolve();
                         }, 500);
                     } else {
@@ -1068,6 +1262,118 @@
             loading.style.display = 'none';
             progressFill.style.width = '0%';
             fileInput.value = '';
+            
+            // Reset QR code
+            qrSection.style.opacity = '0';
+            qrSection.style.transform = 'translateY(20px)';
+            const qrElement = document.getElementById('qrcode');
+            if (qrElement) {
+                qrElement.innerHTML = '';
+            }
+        }
+
+        async function generateAnimatedQRCode(url) {
+            // Show building message
+            qrBuilding.style.display = 'block';
+            qrContainer.style.opacity = '0.3';
+            
+            // Clear any existing QR code
+            const qrElement = document.getElementById('qrcode');
+            qrElement.innerHTML = '';
+            
+            try {
+                // Generate QR code with high quality settings
+                await QRCode.toCanvas(qrElement, url, {
+                    width: 180,
+                    height: 180,
+                    margin: 2,
+                    color: {
+                        dark: '#1f2937',
+                        light: '#ffffff'
+                    },
+                    errorCorrectionLevel: 'M'
+                });
+                
+                // Start the pixel-by-pixel animation
+                setTimeout(() => {
+                    animateQRCodeReveal();
+                }, 300);
+                
+            } catch (error) {
+                console.error('QR Code generation failed:', error);
+                qrBuilding.textContent = '❌ QR code generation failed';
+                setTimeout(() => {
+                    qrBuilding.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        function animateQRCodeReveal() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) return;
+            
+            // Hide the canvas initially
+            canvas.style.opacity = '0';
+            
+            // Create overlay for pixel animation
+            const overlay = document.createElement('div');
+            overlay.className = 'qr-pixels';
+            overlay.style.width = canvas.width + 'px';
+            overlay.style.height = canvas.height + 'px';
+            qrContainer.appendChild(overlay);
+            
+            // Get canvas data for pixel mapping
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = [];
+            
+            // Sample pixels at a lower resolution for animation
+            const sampleRate = 6; // Every 6th pixel
+            for (let y = 0; y < canvas.height; y += sampleRate) {
+                for (let x = 0; x < canvas.width; x += sampleRate) {
+                    const index = (y * canvas.width + x) * 4;
+                    const r = imageData.data[index];
+                    const g = imageData.data[index + 1];
+                    const b = imageData.data[index + 2];
+                    
+                    // If pixel is dark (part of QR code)
+                    if (r < 128 && g < 128 && b < 128) {
+                        pixels.push({ x, y });
+                    }
+                }
+            }
+            
+            // Shuffle pixels for random appearance
+            pixels.sort(() => Math.random() - 0.5);
+            
+            // Hide building message
+            qrBuilding.style.display = 'none';
+            qrContainer.style.opacity = '1';
+            
+            // Animate pixels appearing
+            pixels.forEach((pixel, index) => {
+                setTimeout(() => {
+                    const pixelDiv = document.createElement('div');
+                    pixelDiv.className = 'qr-pixel';
+                    pixelDiv.style.left = pixel.x + 'px';
+                    pixelDiv.style.top = pixel.y + 'px';
+                    pixelDiv.style.width = sampleRate + 'px';
+                    pixelDiv.style.height = sampleRate + 'px';
+                    pixelDiv.style.animationDelay = '0s';
+                    overlay.appendChild(pixelDiv);
+                    
+                    // Remove pixel overlay and show canvas when animation completes
+                    if (index === pixels.length - 1) {
+                        setTimeout(() => {
+                            canvas.style.opacity = '1';
+                            canvas.style.animation = 'qrCodeFinalReveal 0.5s ease-out';
+                            setTimeout(() => {
+                                overlay.remove();
+                            }, 500);
+                        }, 100);
+                    }
+                }, index * 2); // 2ms delay between each pixel
+            });
         }
 
         // Enhanced particle system
