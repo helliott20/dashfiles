@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - DashFiles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        .content {
+            color: #374151;
+        }
+
+        h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 30px 0 15px 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        ul {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f97316;
+            margin: 20px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature-item h4 {
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            Back to DashFiles
+        </a>
+
+        <div class="header">
+            <h1>About DashFiles</h1>
+            <p>What this is and why it exists</p>
+        </div>
+
+        <div class="content">
+            <h2>What is DashFiles?</h2>
+            
+            <p>DashFiles is a simple file sharing service. You drag a file onto the page, and you get a link you can share with others. That's it.</p>
+
+            <p>There's no account creation, no subscription fees, no ads, and no tracking. It's just a straightforward tool for when you need to share a file quickly.</p>
+
+            <div class="warning">
+                <strong>Important:</strong> This is a temporary file hosting service. Files can be deleted at any time without notice. Don't use this as your primary storage—always keep backups of important files.
+            </div>
+
+            <h2>Why did we build this?</h2>
+
+            <p>Honestly? We got tired of existing file sharing services. They either:</p>
+
+            <ul>
+                <li>Required creating accounts for simple tasks</li>
+                <li>Had confusing interfaces with too many features</li>
+                <li>Pushed premium subscriptions aggressively</li>
+                <li>Made sharing files more complicated than it needed to be</li>
+            </ul>
+
+            <p>We wanted something that worked like the old-school internet—simple, direct, and without unnecessary friction.</p>
+
+            <h2>How it works</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h4>Upload</h4>
+                    <p>Drag & drop or click to select your file</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Share</h4>
+                    <p>Get a unique link instantly</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Access</h4>
+                    <p>Anyone with the link can download</p>
+                </div>
+                <div class="feature-item">
+                    <h4>QR Code</h4>
+                    <p>Scan to download on mobile</p>
+                </div>
+            </div>
+
+            <h2>What we don't do</h2>
+
+            <p>To keep things simple, we deliberately don't include features that complicate the core experience:</p>
+
+            <ul>
+                <li>User accounts or login systems</li>
+                <li>File organization or folders</li>
+                <li>Collaboration tools</li>
+                <li>Version control</li>
+                <li>Integration with other services</li>
+                <li>Analytics or tracking</li>
+            </ul>
+
+            <p>If you need those features, there are other services better suited for your needs.</p>
+
+            <h2>Technical details</h2>
+
+            <p>DashFiles is built with modern web technologies and hosted on reliable cloud infrastructure. Files are stored securely and transferred over HTTPS.</p>
+
+            <div class="highlight">
+                <strong>File limits:</strong> Currently, you can upload files up to 2GB in size. We may adjust this limit based on usage and server capacity.
+            </div>
+
+            <h2>Privacy</h2>
+
+            <p>We don't track users, scan file contents, or sell data to third parties. The only information we collect is basic usage statistics to keep the service running smoothly.</p>
+
+            <p>Your files are accessible to anyone who has the link, so only share links with people you trust. We don't have any special access controls or password protection features.</p>
+
+            <h2>Sustainability</h2>
+
+            <p>DashFiles runs on a simple model: we cover hosting costs and keep the service free for reasonable usage. If costs grow beyond what we can manage, we might introduce usage limits or optional paid features, but the core service will remain free.</p>
+
+            <p>We're not venture-funded or looking to "scale rapidly" or "disrupt the industry." We just want to maintain a useful tool that works well.</p>
+
+            <h2>Future plans</h2>
+
+            <p>We'll continue improving reliability and may add small quality-of-life features based on user feedback. But the core philosophy won't change: keep it simple, keep it fast, keep it free.</p>
+
+            <p>If you have suggestions or run into problems, you can reach us through the usual channels. We read everything, even if we don't always respond immediately.</p>
+
+            <div class="highlight">
+                <strong>Bottom line:</strong> DashFiles is a simple tool for sharing files quickly. Use it when you need it, don't rely on it for important data storage, and hopefully it saves you some time.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
