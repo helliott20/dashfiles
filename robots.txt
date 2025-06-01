@@ -1,0 +1,25 @@
+# Robots.txt for DashFiles
+# Place this file at: https://dashfiles.co/robots.txt
+
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /privacy
+
+# Disallow file preview pages from being indexed (they're temporary)
+Disallow: /f/
+
+# Disallow any admin or API endpoints
+Disallow: /api/
+Disallow: /admin/
+
+# Allow search engines to access CSS and JS files
+Allow: /styles/
+Allow: /scripts/
+Allow: /assets/
+
+# Sitemap location
+Sitemap: https://dashfiles.co/sitemap.xml
+
+# Crawl delay to be respectful (optional)
+Crawl-delay: 1

@@ -15,6 +15,26 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://dashfiles.co/">
+
+    <!-- Sitemap reference for search engines -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+
+    <!-- Additional SEO meta tags -->
+    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE_HERE">
+    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE_HERE">
+
+    <!-- Enhanced robots meta -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- DNS prefetch for performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -46,58 +66,64 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://api.qrserver.com">
     
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "DashFiles",
-      "description": "Free file sharing and cloud storage service with instant upload and QR code sharing",
-      "url": "https://dashfiles.co",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "Drag and drop file upload",
-        "QR code sharing",
-        "No registration required",
-        "Up to 2GB file size",
-        "Instant file sharing",
-        "Mobile responsive"
-      ],
-      "screenshot": "https://dashfiles.co/screenshot.jpg",
-      "softwareVersion": "1.0",
-      "author": {
-        "@type": "Organization",
-        "name": "DashFiles"
-      }
-    }
-    </script>
+    <!-- JSON-LD structured data for file sharing service -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "DashFiles",
+  "description": "Free file sharing and cloud storage service with instant upload and QR code sharing",
+  "url": "https://dashfiles.co",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Drag and drop file upload",
+    "QR code sharing",
+    "No registration required",
+    "Up to 2GB file size",
+    "Instant file sharing",
+    "Mobile responsive",
+    "Dark/light mode",
+    "Secure HTTPS transfer"
+  ],
+  "screenshot": "https://dashfiles.co/screenshot.jpg",
+  "softwareVersion": "1.0",
+  "datePublished": "2025-06-01",
+  "author": {
+    "@type": "Organization",
+    "name": "DashFiles",
+    "url": "https://dashfiles.co"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "DashFiles",
+    "url": "https://dashfiles.co"
+  }
+}
+</script>
     
-    <!-- Additional Schema for SoftwareApplication -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "DashFiles File Sharing",
-      "operatingSystem": "Web",
-      "applicationCategory": "UtilityApplication",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "157"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0.00",
-        "priceCurrency": "USD"
-      }
-    }
-    </script>
+<!-- Organization structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "DashFiles",
+  "url": "https://dashfiles.co",
+  "logo": "https://dashfiles.co/logo.png",
+  "description": "Simple, fast, and secure file hosting service",
+  "foundingDate": "2025",
+  "sameAs": [
+    "https://twitter.com/dashfiles",
+    "https://github.com/dashfiles"
+  ]
+}
+</script>
 
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-12WL2XFRJH"></script>
