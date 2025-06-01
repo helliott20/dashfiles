@@ -245,6 +245,24 @@
             border: 0;
         }
 
+         /* Mobile Viewport Fix */
+        html {
+            /* Prevent horizontal scroll on mobile */
+            overflow-x: hidden;
+            /* Better mobile text rendering */
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body {
+            /* Ensure proper mobile layout */
+            min-height: 100vh;
+            /* Prevent horizontal overflow */
+            overflow-x: hidden;
+            /* Better mobile scrolling */
+            -webkit-overflow-scrolling: touch;
+        }
+
         /* Theme Toggle Button Styles */
         .theme-toggle {
             position: fixed;
@@ -316,23 +334,23 @@
             width: 24px;
             height: 24px;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Ensure the indicator itself is perfectly centered */
+            /* Use flexbox for perfect centering - more reliable than transforms */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .theme-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            /* Remove absolute positioning and use flexbox instead */
+            position: relative;
             width: 24px;
             height: 24px;
             fill: var(--toggle-icon);
             stroke: var(--toggle-icon);
             stroke-width: 2;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Ensure crisp rendering */
+            shape-rendering: geometricPrecision;
         }
 
         .sun-icon {
@@ -1534,30 +1552,28 @@
         /* Additional mobile container adjustments */
         @media (max-width: 768px) {
             .container {
-                padding: 40px 25px;
-                margin: 10px;
-                border-radius: 24px;
-                /* Ensure container doesn't interfere with toggle button */
-                margin-top: 80px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
                 padding: 30px 20px;
                 margin: 8px;
                 border-radius: 20px;
-                margin-top: 75px;
+                /* Ensure container doesn't interfere with toggle button */
+                margin-top: 70px;
+                /* Better mobile viewport handling */
+                max-height: calc(100vh - 90px);
+                overflow-y: auto;
             }
             
             .upload-zone {
-                padding: 35px 20px;
+                padding: 40px 25px;
                 border-radius: 20px;
             }
             
+            .logo {
+                margin-bottom: 35px;
+            }
+            
             .logo h1 {
-                font-size: 2rem;
-                letter-spacing: -1px;
+                font-size: 2.2rem;
+                margin-bottom: 8px;
             }
 
             .logo p {
@@ -1565,14 +1581,167 @@
             }
         }
 
-        @media (max-width: 360px) {
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                /* Ensure no horizontal overflow */
+                overflow-x: hidden;
+            }
+            
             .container {
-                margin-top: 70px;
                 padding: 25px 16px;
+                margin: 5px;
+                border-radius: 18px;
+                margin-top: 65px;
+                /* More aggressive mobile sizing */
+                max-height: calc(100vh - 80px);
+                min-height: auto;
             }
             
             .upload-zone {
                 padding: 30px 16px;
+                border-radius: 16px;
+            }
+            
+            .upload-icon {
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 20px;
+                border-radius: 16px;
+            }
+            
+            .upload-icon svg {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .upload-text h2 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .upload-text p {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .upload-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+                border-radius: 12px;
+            }
+            
+            .logo {
+                margin-bottom: 30px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+                letter-spacing: -1px;
+                margin-bottom: 6px;
+            }
+
+            .logo p {
+                font-size: 1rem;
+            }
+            
+            .disclaimer {
+                margin-top: 25px;
+                padding: 18px;
+                font-size: 0.85rem;
+            }
+            
+            .footer {
+                margin-top: 30px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                margin-top: 60px;
+                padding: 20px 12px;
+                max-height: calc(100vh - 75px);
+            }
+            
+            .upload-zone {
+                padding: 25px 12px;
+            }
+            
+            .upload-icon {
+                width: 50px;
+                height: 50px;
+                margin: 0 auto 15px;
+            }
+            
+            .upload-icon svg {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .upload-text h2 {
+                font-size: 1.2rem;
+            }
+            
+            .upload-text p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .logo p {
+                font-size: 0.95rem;
+            }
+            
+            .disclaimer {
+                margin-top: 20px;
+                padding: 15px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container {
+                margin-top: 50px;
+                padding: 20px;
+                max-height: calc(100vh - 60px);
+            }
+            
+            .logo {
+                margin-bottom: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+                margin-bottom: 4px;
+            }
+            
+            .logo p {
+                font-size: 0.95rem;
+            }
+            
+            .upload-zone {
+                padding: 25px 20px;
+            }
+            
+            .upload-icon {
+                width: 50px;
+                height: 50px;
+                margin: 0 auto 15px;
+            }
+            
+            .disclaimer {
+                margin-top: 15px;
+                padding: 12px;
+                font-size: 0.8rem;
+            }
+            
+            .footer {
+                margin-top: 15px;
             }
         }
 
