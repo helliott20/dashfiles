@@ -266,6 +266,9 @@
             outline: none;
             overflow: hidden;
             animation: themeButtonEntrance 1s ease-out 2s both;
+            /* Ensure perfect centering */
+            padding: 0;
+            margin: 0;
         }
 
         @keyframes themeButtonEntrance {
@@ -313,12 +316,17 @@
             width: 24px;
             height: 24px;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Ensure the indicator itself is perfectly centered */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .theme-icon {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 24px;
             height: 24px;
             fill: var(--toggle-icon);
@@ -1427,6 +1435,147 @@
                         border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
                         box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+         /* Mobile Responsive Improvements */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                /* Adjust border for smaller size */
+                border-width: 1.5px;
+            }
+
+            .theme-indicator {
+                width: 20px;
+                height: 20px;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+                /* Ensure crisp icons on smaller screens */
+                stroke-width: 1.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+                border-width: 1.5px;
+                /* Slightly larger touch target for better usability */
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .theme-indicator {
+                width: 18px;
+                height: 18px;
+            }
+
+            .theme-icon {
+                width: 18px;
+                height: 18px;
+                stroke-width: 1.5;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            .theme-toggle {
+                top: 12px;
+                right: 12px;
+                width: 42px;
+                height: 42px;
+            }
+
+            .theme-indicator {
+                width: 16px;
+                height: 16px;
+            }
+
+            .theme-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Enhanced touch interaction for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .theme-toggle {
+                /* Improve touch feedback on mobile */
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .theme-toggle:active {
+                transform: translateY(1px) scale(0.95);
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Fix for iOS Safari button styling */
+        .theme-toggle {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-style: solid;
+        }
+
+        /* Ensure accessibility on all screen sizes */
+        .theme-toggle:focus-visible {
+            outline: 2px solid var(--text-accent);
+            outline-offset: 2px;
+        }
+
+        /* Additional mobile container adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 25px;
+                margin: 10px;
+                border-radius: 24px;
+                /* Ensure container doesn't interfere with toggle button */
+                margin-top: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 8px;
+                border-radius: 20px;
+                margin-top: 75px;
+            }
+            
+            .upload-zone {
+                padding: 35px 20px;
+                border-radius: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+                letter-spacing: -1px;
+            }
+
+            .logo p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                margin-top: 70px;
+                padding: 25px 16px;
+            }
+            
+            .upload-zone {
+                padding: 30px 16px;
+            }
+        }
+
     </style>
 </head>
 <body>
