@@ -284,9 +284,6 @@
             outline: none;
             overflow: hidden;
             animation: themeButtonEntrance 1s ease-out 2s both;
-            /* Ensure perfect centering */
-            padding: 0;
-            margin: 0;
         }
 
         @keyframes themeButtonEntrance {
@@ -334,25 +331,19 @@
             width: 24px;
             height: 24px;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Use flexbox for perfect centering - more reliable than transforms */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .theme-icon {
-            /* Remove absolute positioning and use flexbox instead */
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 24px;
             height: 24px;
             fill: var(--toggle-icon);
             stroke: var(--toggle-icon);
             stroke-width: 2;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Ensure crisp rendering */
-            shape-rendering: geometricPrecision;
         }
-
         .sun-icon {
             opacity: 1;
             transform: rotate(0deg) scale(1);
@@ -1454,15 +1445,13 @@
                         box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-         /* Mobile Responsive Improvements */
+        /* Mobile responsive adjustments */
         @media (max-width: 768px) {
             .theme-toggle {
                 top: 20px;
                 right: 20px;
                 width: 50px;
                 height: 50px;
-                /* Adjust border for smaller size */
-                border-width: 1.5px;
             }
 
             .theme-indicator {
@@ -1473,7 +1462,6 @@
             .theme-icon {
                 width: 20px;
                 height: 20px;
-                /* Ensure crisp icons on smaller screens */
                 stroke-width: 1.5;
             }
         }
@@ -1482,12 +1470,8 @@
             .theme-toggle {
                 top: 15px;
                 right: 15px;
-                width: 44px;
-                height: 44px;
-                border-width: 1.5px;
-                /* Slightly larger touch target for better usability */
-                min-width: 44px;
-                min-height: 44px;
+                width: 45px;
+                height: 45px;
             }
 
             .theme-indicator {
@@ -1502,23 +1486,43 @@
             }
         }
 
-        /* Extra small screens */
+        /* Mobile container fixes */
+        @media (max-width: 768px) {
+            .container {
+                padding: 35px 25px;
+                margin: 15px;
+                margin-top: 80px;
+                max-height: calc(100vh - 100px);
+                overflow-y: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+                margin: 10px;
+                margin-top: 70px;
+                max-height: calc(100vh - 90px);
+            }
+            
+            .upload-zone {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .logo p {
+                font-size: 1rem;
+            }
+        }
+
         @media (max-width: 360px) {
-            .theme-toggle {
-                top: 12px;
-                right: 12px;
-                width: 42px;
-                height: 42px;
-            }
-
-            .theme-indicator {
-                width: 16px;
-                height: 16px;
-            }
-
-            .theme-icon {
-                width: 16px;
-                height: 16px;
+            .container {
+                margin: 8px;
+                padding: 20px 15px;
+                margin-top: 65px;
             }
         }
 
