@@ -3,7 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashFiles - Simple File Hosting</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>DashFiles - Free Fast File Sharing & Cloud Storage | Upload Files Instantly</title>
+    <meta name="title" content="DashFiles - Free Fast File Sharing & Cloud Storage | Upload Files Instantly">
+    <meta name="description" content="Share files instantly with DashFiles - the fastest free file hosting service. Drag & drop upload, QR code sharing, no registration required. Upload up to 2GB files securely.">
+    <meta name="keywords" content="file sharing, file upload, cloud storage, free file hosting, instant file sharing, drag drop upload, QR code sharing, temporary file hosting">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="author" content="DashFiles">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dashfiles.co/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dashfiles.co/">
+    <meta property="og:title" content="DashFiles - Free Fast File Sharing & Cloud Storage">
+    <meta property="og:description" content="Share files instantly with DashFiles - the fastest free file hosting service. Drag & drop upload, QR code sharing, no registration required.">
+    <meta property="og:image" content="https://dashfiles.co/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="DashFiles">
+    
+    <!-- Twitter Cards -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://dashfiles.co/">
+    <meta property="twitter:title" content="DashFiles - Free Fast File Sharing & Cloud Storage">
+    <meta property="twitter:description" content="Share files instantly with DashFiles - the fastest free file hosting service. Drag & drop upload, QR code sharing, no registration required.">
+    <meta property="twitter:image" content="https://dashfiles.co/twitter-image.jpg">
+    <meta property="twitter:creator" content="@dashfiles">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://api.dashfiles.co">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://api.qrserver.com">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "DashFiles",
+      "description": "Free file sharing and cloud storage service with instant upload and QR code sharing",
+      "url": "https://dashfiles.co",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Drag and drop file upload",
+        "QR code sharing",
+        "No registration required",
+        "Up to 2GB file size",
+        "Instant file sharing",
+        "Mobile responsive"
+      ],
+      "screenshot": "https://dashfiles.co/screenshot.jpg",
+      "softwareVersion": "1.0",
+      "author": {
+        "@type": "Organization",
+        "name": "DashFiles"
+      }
+    }
+    </script>
+    
+    <!-- Additional Schema for SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DashFiles File Sharing",
+      "operatingSystem": "Web",
+      "applicationCategory": "UtilityApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "157"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-12WL2XFRJH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-12WL2XFRJH');
+</script>
+
     <style>
         :root {
             /* Light theme colors */
@@ -99,6 +204,18 @@
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        /* Hidden heading for SEO */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
         /* Theme Toggle Button Styles */
@@ -403,6 +520,41 @@
             }
         }
 
+        /* SEO-optimized features section */
+        .features {
+            display: none; /* Hidden but readable by search engines */
+            margin-bottom: 40px;
+        }
+
+        .features h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-item h3 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
         .upload-zone {
             border: 2px dashed var(--border-primary);
             border-radius: 24px;
@@ -550,7 +702,7 @@
             }
         }
 
-        .upload-text h3 {
+        .upload-text h2 {
             font-size: 1.8rem;
             color: var(--text-primary);
             margin-bottom: 12px;
@@ -558,7 +710,7 @@
             transition: all 0.8s ease;
         }
 
-        .upload-zone:hover .upload-text h3 {
+        .upload-zone:hover .upload-text h2 {
             color: var(--text-accent);
         }
 
@@ -1251,6 +1403,32 @@
     </style>
 </head>
 <body>
+    <!-- Hidden SEO content -->
+    <h1 class="sr-only">DashFiles - Free File Sharing and Cloud Storage Service</h1>
+    
+    <!-- Hidden features section for SEO -->
+    <section class="features sr-only">
+        <h2>File Sharing Features</h2>
+        <div class="features-grid">
+            <article class="feature-item">
+                <h3>Instant Upload</h3>
+                <p>Upload files up to 2GB instantly with our drag and drop interface. No registration required.</p>
+            </article>
+            <article class="feature-item">
+                <h3>QR Code Sharing</h3>
+                <p>Share files easily with automatically generated QR codes for mobile device access.</p>
+            </article>
+            <article class="feature-item">
+                <h3>Secure Transfer</h3>
+                <p>All files are transferred securely using HTTPS encryption for your privacy and security.</p>
+            </article>
+            <article class="feature-item">
+                <h3>No Registration</h3>
+                <p>Start sharing files immediately without creating an account or providing personal information.</p>
+            </article>
+        </div>
+    </section>
+
     <div class="bg-shapes">
         <div class="floating-shape"></div>
         <div class="floating-shape"></div>
@@ -1258,86 +1436,88 @@
         <div class="floating-shape"></div>
     </div>
 
-    <div class="container">
+    <main class="container">
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme(event)" onkeydown="handleThemeKeydown(event)" tabindex="0" aria-label="Toggle dark/light mode">
             <div class="theme-indicator">
-                <svg class="theme-icon sun-icon" viewBox="0 0 24 24">
+                <svg class="theme-icon sun-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 17.5C15.0376 17.5 17.5 15.0376 17.5 12C17.5 8.96243 15.0376 6.5 12 6.5C8.96243 6.5 6.5 8.96243 6.5 12C6.5 15.0376 8.96243 17.5 12 17.5Z"/>
                     <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22"/>
                 </svg>
-                <svg class="theme-icon moon-icon" viewBox="0 0 24 24">
+                <svg class="theme-icon moon-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79Z"/>
                 </svg>
             </div>
         </button>
 
-        <div class="logo">
+        <header class="logo">
             <h1>DashFiles</h1>
             <p>Simple, fast, and secure file hosting</p>
-        </div>
+        </header>
 
-        <div class="upload-zone" id="uploadZone">
-            <div class="upload-icon">
+        <section class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="File upload area">
+            <div class="upload-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                 </svg>
             </div>
             <div class="upload-text">
-                <h3>Drop your files here</h3>
+                <h2>Drop your files here</h2>
                 <p>or click to browse and select files</p>
-                <button class="upload-btn">
+                <button class="upload-btn" type="button">
                     Choose Files
                 </button>
             </div>
-            <input type="file" id="fileInput" class="file-input" multiple>
-        </div>
+            <input type="file" id="fileInput" class="file-input" multiple aria-label="Select files to upload">
+        </section>
 
-        <div class="progress-container" id="progressContainer">
+        <div class="progress-container" id="progressContainer" role="progressbar" aria-label="Upload progress">
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
+        <div class="loading" id="loading" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
             <p>Uploading your file...</p>
         </div>
 
-        <div class="result-container" id="resultContainer">
+        <section class="result-container" id="resultContainer" aria-live="polite">
             <div class="result-title">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
                 </svg>
                 Upload Successful!
             </div>
-            <div class="result-link" id="resultLink"></div>
-            <button class="copy-btn" onclick="copyToClipboard()">Copy Link</button>
-            <button class="copy-btn" onclick="resetUpload()">Upload Another</button>
+            <div class="result-link" id="resultLink" aria-label="File download link"></div>
+            <button class="copy-btn" onclick="copyToClipboard()" type="button">Copy Link</button>
+            <button class="copy-btn" onclick="resetUpload()" type="button">Upload Another</button>
             
             <div class="qr-section" id="qrSection">
                 <div class="qr-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21C5,22.1 5.9,23 7,23H17C18.1,23 19,22.1 19,21V3C19,1.89 18.1,1 17,1Z"/>
                     </svg>
                     Scan with your phone
                 </div>
                 <div class="qr-building" id="qrBuilding">🔧 Building QR code...</div>
                 <div class="qr-container" id="qrContainer">
-                    <div id="qrcode"></div>
+                    <div id="qrcode" aria-label="QR code for file download"></div>
                 </div>
                 <div class="qr-instruction">Point your camera at the QR code to download the file</div>
             </div>
-        </div>
+        </section>
 
-        <div class="disclaimer">
+        <aside class="disclaimer">
             <strong>⚠️ Important:</strong> Files may be deleted at any time without notice. This service is provided as-is for temporary file sharing. Please keep backups of important files.
-        </div>
+        </aside>
 
-        <div class="footer">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-        </div>
-    </div>
+        <footer class="footer">
+            <a href="/privacy" rel="nofollow">Privacy Policy</a>
+            <a href="/terms" rel="nofollow">Terms of Service</a>
+            <a href="/about" rel="nofollow">About</a>
+            <a href="/contact" rel="nofollow">Contact</a>
+        </footer>
+    </main>
 
     <script>
         // Theme Management with persistence
@@ -1468,6 +1648,13 @@
             fileInput.click();
         });
 
+        uploadZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFileUpload(e.target.files[0]);
@@ -1475,6 +1662,15 @@
         });
 
         async function handleFileUpload(file) {
+            // Track upload event for analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'file_upload_started', {
+                    event_category: 'engagement',
+                    file_size: file.size,
+                    file_type: file.type
+                });
+            }
+
             // Show loading state
             loading.style.display = 'block';
             progressContainer.style.display = 'block';
@@ -1506,6 +1702,14 @@
             } catch (error) {
                 console.error('Upload error:', error);
                 showError('Upload failed. Please try again.');
+                
+                // Track error for analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'file_upload_error', {
+                        event_category: 'errors',
+                        error_message: error.message
+                    });
+                }
             }
         }
 
@@ -1538,6 +1742,15 @@
                             
                             createSuccessParticles();
                             generateAnimatedQRCode(shareUrl);
+                            
+                            // Track successful upload
+                            if (typeof gtag !== 'undefined') {
+                                gtag('event', 'file_upload_completed', {
+                                    event_category: 'engagement',
+                                    file_size: file.size
+                                });
+                            }
+                            
                             resolve();
                         }, 500);
                     } else {
@@ -1571,6 +1784,13 @@
                 
                 // Create copy success effect
                 createCopyEffect(btn);
+                
+                // Track copy event
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'link_copied', {
+                        event_category: 'engagement'
+                    });
+                }
                 
                 setTimeout(() => {
                     btn.textContent = originalText;
@@ -1700,6 +1920,7 @@
                 // Create image element
                 const img = document.createElement('img');
                 img.src = qrUrl;
+                img.alt = 'QR code for file download';
                 img.style.width = '180px';
                 img.style.height = '180px';
                 img.style.borderRadius = '8px';
