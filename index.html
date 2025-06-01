@@ -572,115 +572,6 @@
             margin-top: 30px;
         }
 
-        /* Success Page Styles */
-        .success-container {
-            display: none;
-            text-align: center;
-            padding: 60px 40px;
-            background: var(--bg-result);
-            border: 2px solid var(--border-result);
-            border-radius: 24px;
-            margin-top: 40px;
-            position: relative;
-            overflow: hidden;
-            animation: successEntrance 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes successEntrance {
-            0% {
-                opacity: 0;
-                transform: scale(0.9) translateY(30px);
-                filter: blur(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-                filter: blur(0);
-            }
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: successIconPulse 2s ease-in-out infinite;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        @keyframes successIconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .success-icon svg {
-            width: 40px;
-            height: 40px;
-            fill: white;
-            animation: checkmarkDraw 0.8s ease-out 0.5s both;
-        }
-
-        @keyframes checkmarkDraw {
-            0% {
-                stroke-dasharray: 0 100;
-                opacity: 0;
-            }
-            100% {
-                stroke-dasharray: 100 0;
-                opacity: 1;
-            }
-        }
-
-        .success-title {
-            color: var(--text-result);
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            animation: successTextSlide 0.8s ease-out 0.7s both;
-        }
-
-        .success-message {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 30px;
-            animation: successTextSlide 0.8s ease-out 0.9s both;
-        }
-
-        @keyframes successTextSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .success-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: successActionsSlide 0.8s ease-out 1.1s both;
-        }
-
-        @keyframes successActionsSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         /* Theme Toggle Button Styles */
         .theme-toggle {
             position: fixed;
@@ -2424,21 +2315,6 @@
             </div>
         </section>
 
-        <!-- Success Page Container -->
-        <div class="success-container" id="successContainer">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
-                </svg>
-            </div>
-            <h2 class="success-title">File Upload Complete!</h2>
-            <p class="success-message">Your file has been successfully uploaded and is ready to share.</p>
-            <div class="success-actions">
-                <button class="copy-btn" onclick="copyToClipboard()" type="button">Copy Share Link</button>
-                <button class="copy-btn" onclick="resetUpload()" type="button">Upload Another File</button>
-            </div>
-        </div>
-
         <aside class="disclaimer">
             <strong>⚠️ Important:</strong> Files may be deleted at any time without notice. This service is provided as-is for temporary file sharing. Please keep backups of important files.
         </aside>
@@ -2601,21 +2477,16 @@
         // Handle browser back/forward navigation
         window.addEventListener('popstate', function(event) {
             if (event.state && event.state.page === 'success') {
-                showSuccessPage();
-            } else {
-                hideSuccessPage();
+                // Stay on results page - no separate success page needed
+                return;
+            } else if (window.location.pathname === '/') {
+                // User navigated back to home - reset if needed
+                const resultContainer = document.getElementById('resultContainer');
+                if (resultContainer.style.display !== 'none') {
+                    resetUpload();
+                }
             }
         });
-
-        function showSuccessPage() {
-            document.getElementById('successContainer').style.display = 'block';
-            document.getElementById('uploadZone').classList.add('hidden');
-            document.getElementById('resultContainer').style.display = 'none';
-        }
-
-        function hideSuccessPage() {
-            document.getElementById('successContainer').style.display = 'none';
-        }
 
         // Theme Management with persistence
         let currentTheme = localStorage.getItem('dashfiles-theme') || 'light';
@@ -2841,11 +2712,8 @@
                             createSuccessParticles();
                             generateAnimatedQRCode(shareUrl);
                             
-                            // Navigate to success URL for conversion tracking
-                            setTimeout(() => {
-                                navigateToSuccess();
-                                showSuccessPage();
-                            }, 2000);
+                            // Navigate to success URL for conversion tracking RIGHT when results are shown
+                            navigateToSuccess();
                             
                             // Track successful upload (only if consent given)
                             if (typeof gtag !== 'undefined' && cookiePreferences.analytics) {
@@ -2983,15 +2851,14 @@
         }
 
         function resetUpload() {
-            // Hide results and success page
+            // Hide results
             resultContainer.style.display = 'none';
-            document.getElementById('successContainer').style.display = 'none';
             progressContainer.style.display = 'none';
             loading.style.display = 'none';
             progressFill.style.width = '0%';
             fileInput.value = '';
             
-            // Reset URL
+            // Reset URL back to home
             const currentUrl = new URL(window.location.href);
             currentUrl.pathname = '/';
             currentUrl.search = '';
