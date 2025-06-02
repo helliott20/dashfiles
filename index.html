@@ -2328,26 +2328,29 @@
     <script>
         // Cookie Consent Management
         let cookiePreferences = {
-            analytics: false,
+            analytics: true,
             essential: true // Always true, cannot be disabled
         };
 
         // Check if user has already made a choice
         function checkCookieConsent() {
-            const consent = localStorage.getItem('dashfiles-cookie-consent');
-            if (!consent) {
-                // Show cookie banner after a longer delay for subtle UX
-                setTimeout(() => {
-                    document.getElementById('cookieBanner').classList.add('show');
-                }, 3000);
-            } else {
-                const preferences = JSON.parse(consent);
-                cookiePreferences = preferences;
-                if (preferences.analytics) {
-                    initializeAnalytics();
-                }
-            }
+    const consent = localStorage.getItem('dashfiles-cookie-consent');
+    if (!consent) {
+        // No previous choice - initialize analytics by default
+        initializeAnalytics();
+        // Show cookie banner after a longer delay for subtle UX
+        setTimeout(() => {
+            document.getElementById('cookieBanner').classList.add('show');
+        }, 3000);
+    } else {
+        const preferences = JSON.parse(consent);
+        cookiePreferences = preferences;
+        // Only initialize if user hasn't explicitly declined
+        if (preferences.analytics) {
+            initializeAnalytics();
         }
+    }
+}
 
         function acceptCookies() {
             cookiePreferences.analytics = true;
