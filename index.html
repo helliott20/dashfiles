@@ -2332,26 +2332,23 @@
             essential: true // Always true, cannot be disabled
         };
 
-        // Check if user has already made a choice
-        function checkCookieConsent() {
+// Updated checkCookieConsent function (no longer affects Analytics)
+function checkCookieConsent() {
+    // Always initialize analytics immediately
+    initializeAnalytics();
+    
     const consent = localStorage.getItem('dashfiles-cookie-consent');
     if (!consent) {
-        // No previous choice - initialize analytics by default
-        initializeAnalytics();
-        // Show cookie banner after a longer delay for subtle UX
+        // Show cookie banner for other cookies (not analytics)
         setTimeout(() => {
             document.getElementById('cookieBanner').classList.add('show');
         }, 3000);
     } else {
         const preferences = JSON.parse(consent);
         cookiePreferences = preferences;
-        // Only initialize if user hasn't explicitly declined
-        if (preferences.analytics) {
-            initializeAnalytics();
-        }
+        // Analytics is always on regardless of preferences
     }
 }
-
         function acceptCookies() {
             cookiePreferences.analytics = true;
             saveCookiePreferences();
@@ -2424,58 +2421,187 @@
             }, 600);
         }
 
-        // Initialize Google Analytics only after user consent
-        function initializeAnalytics() {
-            // Only initialize if not already loaded
-            if (typeof gtag === 'undefined') {
-                // Load Google Analytics script
-                const script = document.createElement('script');
-                script.async = true;
-                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-12WL2XFRJH';
-                document.head.appendChild(script);
+        // Initialize Google Analytics immediately on page load
+function initializeAnalytics() {
+    // Only initialize if not already loaded
+    if (typeof gtag === 'undefined') {
+        // Load Google Analytics script
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_CONFIG.TRACKING_ID}`;
+        document.head.appendChild(script);
 
-                // Initialize gtag
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                window.gtag = gtag;
-                gtag('js', new Date());
-                gtag('config', 'G-12WL2XFRJH', {
-                    page_title: document.title,
-                    page_location: window.location.href
-                });
+        // Initialize gtag
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_CONFIG.TRACKING_ID, {
+            page_title: document.title,
+            page_location: window.location.href,
+            // Additional config options
+            send_page_view: true,
+            anonymize_ip: false, // Set to true if you want IP anonymization
+            allow_google_signals: true,
+            allow_ad_personalization_signals: true
+        });
 
-                console.log('Google Analytics initialized');
-            }
+        console.log('Google Analytics initialized with ID:', GA_CONFIG.TRACKING_ID);
+        return true;
+    }
+    return false;
+}
+
+// Function to remove Google Analytics
+function removeAnalytics() {
+    try {
+        // Remove gtag scripts
+        const scripts = document.querySelectorAll('script[src*="googletagmanager.com/gtag/js"]');
+        scripts.forEach(script => script.remove());
+        
+        // Clear gtag function and dataLayer
+        if (window.gtag) {
+            window.gtag = undefined;
+            delete window.gtag;
         }
-
-        // Success URL tracking for Google Ads
-        function navigateToSuccess() {
-            // Update URL to success page for conversion tracking
-            const currentUrl = new URL(window.location.href);
-            currentUrl.pathname = '/success';
-            currentUrl.searchParams.set('file_uploaded', 'true');
-            
-            // Update browser history without reload
-            window.history.pushState({page: 'success'}, 'Upload Success - DashFiles', currentUrl.toString());
-            
-            // Update page title for conversion tracking
-            document.title = 'Upload Successful - DashFiles';
-            
-            // Track conversion event for Google Ads
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'conversion', {
-                    send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL', // Replace with your actual conversion ID
-                    event_category: 'file_upload',
-                    event_label: 'upload_completed',
-                    value: 1
-                });
-                
-                gtag('event', 'page_view', {
-                    page_title: 'Upload Success - DashFiles',
-                    page_location: currentUrl.toString()
-                });
-            }
+        if (window.dataLayer) {
+            window.dataLayer = [];
         }
+        
+        // Disable Google Analytics
+        window[`ga-disable-${GA_CONFIG.TRACKING_ID}`] = true;
+        
+        console.log('Google Analytics removed');
+        return true;
+    } catch (error) {
+        console.error('Error removing Google Analytics:', error);
+        return false;
+    }
+}
+
+// Function to change Google Analytics tracking ID
+function changeAnalyticsId(newTrackingId, newConversionId = null, newConversionLabel = null) {
+    if (!newTrackingId) {
+        console.error('New tracking ID is required');
+        return false;
+    }
+    
+    try {
+        // Update configuration
+        GA_CONFIG.TRACKING_ID = newTrackingId;
+        if (newConversionId) GA_CONFIG.CONVERSION_ID = newConversionId;
+        if (newConversionLabel) GA_CONFIG.CONVERSION_LABEL = newConversionLabel;
+        
+        // Remove existing analytics
+        removeAnalytics();
+        
+        // Wait a moment then reinitialize with new ID
+        setTimeout(() => {
+            initializeAnalytics();
+            console.log('Google Analytics ID changed to:', newTrackingId);
+        }, 100);
+        
+        return true;
+    } catch (error) {
+        console.error('Error changing Google Analytics ID:', error);
+        return false;
+    }
+}
+
+// Function to add additional Google Analytics property
+function addAnalyticsProperty(additionalTrackingId, configOptions = {}) {
+    if (!additionalTrackingId) {
+        console.error('Additional tracking ID is required');
+        return false;
+    }
+    
+    try {
+        if (typeof gtag !== 'undefined') {
+            gtag('config', additionalTrackingId, {
+                page_title: document.title,
+                page_location: window.location.href,
+                ...configOptions
+            });
+            console.log('Additional Google Analytics property added:', additionalTrackingId);
+            return true;
+        } else {
+            console.error('Google Analytics not initialized. Call initializeAnalytics() first.');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error adding additional Analytics property:', error);
+        return false;
+    }
+}
+
+// Enhanced tracking functions
+function trackEvent(eventName, parameters = {}) {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, parameters);
+        console.log('Event tracked:', eventName, parameters);
+    } else {
+        console.warn('Google Analytics not loaded, event not tracked:', eventName);
+    }
+}
+
+function trackConversion(value = 1, currency = 'USD') {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+            send_to: `${GA_CONFIG.CONVERSION_ID}/${GA_CONFIG.CONVERSION_LABEL}`,
+            value: value,
+            currency: currency,
+            event_category: 'file_upload',
+            event_label: 'upload_completed'
+        });
+        console.log('Conversion tracked');
+    } else {
+        console.warn('Google Analytics not loaded, conversion not tracked');
+    }
+}
+
+function trackPageView(pageTitle = null, pageLocation = null) {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+            page_title: pageTitle || document.title,
+            page_location: pageLocation || window.location.href
+        });
+        console.log('Page view tracked');
+    } else {
+        console.warn('Google Analytics not loaded, page view not tracked');
+    }
+}
+
+// Function to get current Analytics status
+function getAnalyticsStatus() {
+    return {
+        isLoaded: typeof gtag !== 'undefined',
+        trackingId: GA_CONFIG.TRACKING_ID,
+        conversionId: GA_CONFIG.CONVERSION_ID,
+        dataLayerLength: window.dataLayer ? window.dataLayer.length : 0,
+        isDisabled: window[`ga-disable-${GA_CONFIG.TRACKING_ID}`] === true
+    };
+}
+
+
+        // Updated success navigation function
+function navigateToSuccess() {
+    // Update URL to success page for conversion tracking
+    const currentUrl = new URL(window.location.href);
+    currentUrl.pathname = '/success';
+    currentUrl.searchParams.set('file_uploaded', 'true');
+    
+    // Update browser history without reload
+    window.history.pushState({page: 'success'}, 'Upload Success - DashFiles', currentUrl.toString());
+    
+    // Update page title for conversion tracking
+    document.title = 'Upload Successful - DashFiles';
+    
+    // Track conversion event
+    trackConversion();
+    
+    // Track page view
+    trackPageView('Upload Success - DashFiles', currentUrl.toString());
+}
 
         // Handle browser back/forward navigation
         window.addEventListener('popstate', function(event) {
@@ -2582,6 +2708,13 @@
             DOMAIN: 'dashfiles.co'
         };
 
+        // Google Analytics Configuration - Always On
+        const GA_CONFIG = {
+        TRACKING_ID: 'G-12WL2XFRJH', // Your current tracking ID
+        CONVERSION_ID: 'AW-CONVERSION_ID', // Replace with your actual conversion ID
+        CONVERSION_LABEL: 'CONVERSION_LABEL' // Replace with your actual conversion label
+        };
+
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
         const progressContainer = document.getElementById('progressContainer');
@@ -2633,57 +2766,54 @@
             }
         });
 
-        async function handleFileUpload(file) {
-            // Track upload event for analytics (only if consent given)
-            if (typeof gtag !== 'undefined' && cookiePreferences.analytics) {
-                gtag('event', 'file_upload_started', {
-                    event_category: 'engagement',
-                    file_size: file.size,
-                    file_type: file.type
-                });
-            }
+        // Updated file upload tracking
+async function handleFileUpload(file) {
+    // Track upload event for analytics (always enabled now)
+    trackEvent('file_upload_started', {
+        event_category: 'engagement',
+        file_size: file.size,
+        file_type: file.type
+    });
 
-            // Show loading state
-            loading.style.display = 'block';
-            progressContainer.style.display = 'block';
-            resultContainer.style.display = 'none';
+    // Show loading state
+    loading.style.display = 'block';
+    progressContainer.style.display = 'block';
+    resultContainer.style.display = 'none';
 
-            try {
-                // Step 1: Get presigned URL from your API
-                const response = await fetch(`${CONFIG.API_ENDPOINT}/upload`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        fileName: file.name,
-                        fileType: file.type,
-                        fileSize: file.size
-                    })
-                });
+    try {
+        // Step 1: Get presigned URL from your API
+        const response = await fetch(`${CONFIG.API_ENDPOINT}/upload`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fileName: file.name,
+                fileType: file.type,
+                fileSize: file.size
+            })
+        });
 
-                if (!response.ok) {
-                    throw new Error('Failed to get upload URL');
-                }
-
-                const data = await response.json();
-                
-                // Step 2: Upload directly to S3 using presigned URL
-                await uploadToS3(file, data.presignedUrl, data.shareUrl);
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                showError('Upload failed. Please try again.');
-                
-                // Track error for analytics (only if consent given)
-                if (typeof gtag !== 'undefined' && cookiePreferences.analytics) {
-                    gtag('event', 'file_upload_error', {
-                        event_category: 'errors',
-                        error_message: error.message
-                    });
-                }
-            }
+        if (!response.ok) {
+            throw new Error('Failed to get upload URL');
         }
+
+        const data = await response.json();
+        
+        // Step 2: Upload directly to S3 using presigned URL
+        await uploadToS3(file, data.presignedUrl, data.shareUrl);
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        showError('Upload failed. Please try again.');
+        
+        // Track error for analytics
+        trackEvent('file_upload_error', {
+            event_category: 'errors',
+            error_message: error.message
+        });
+    }
+}       
 
         async function uploadToS3(file, presignedUrl, shareUrl) {
             return new Promise((resolve, reject) => {
@@ -2749,30 +2879,29 @@
             alert(message);
         }
 
-        function copyToClipboard() {
-            const link = resultLink.textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = 'Copied!';
-                btn.style.background = 'linear-gradient(135deg, #059669, #047857)';
-                
-                // Create copy success effect
-                createCopyEffect(btn);
-                
-                // Track copy event (only if consent given)
-                if (typeof gtag !== 'undefined' && cookiePreferences.analytics) {
-                    gtag('event', 'link_copied', {
-                        event_category: 'engagement'
-                    });
-                }
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                }, 2000);
-            });
-        }
+        // Updated copy link tracking
+function copyToClipboard() {
+    const link = resultLink.textContent;
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = 'linear-gradient(135deg, #059669, #047857)';
+        
+        // Create copy success effect
+        createCopyEffect(btn);
+        
+        // Track copy event (always enabled)
+        trackEvent('link_copied', {
+            event_category: 'engagement'
+        });
+        
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+        }, 2000);
+    });
+}
 
         function createCopyEffect(button) {
             const rect = button.getBoundingClientRect();
@@ -3062,6 +3191,38 @@
                 document.body.style.opacity = '1';
             }, 100);
         });
+
+    // Console helper functions for easy management
+window.AnalyticsManager = {
+    // Main functions
+    init: initializeAnalytics,
+    remove: removeAnalytics,
+    changeId: changeAnalyticsId,
+    addProperty: addAnalyticsProperty,
+    
+    // Tracking functions
+    track: trackEvent,
+    trackConversion: trackConversion,
+    trackPageView: trackPageView,
+    
+    // Utility functions
+    status: getAnalyticsStatus,
+    config: GA_CONFIG,
+    
+    // Quick actions
+    disable: () => {
+        window[`ga-disable-${GA_CONFIG.TRACKING_ID}`] = true;
+        console.log('Google Analytics disabled');
+    },
+    enable: () => {
+        window[`ga-disable-${GA_CONFIG.TRACKING_ID}`] = false;
+        console.log('Google Analytics enabled');
+    }
+};
+
+// Log that Analytics Manager is available
+console.log('Analytics Manager loaded. Use window.AnalyticsManager for management functions.');
+console.log('Available functions:', Object.keys(window.AnalyticsManager));
     </script>
 </body>
 </html>
