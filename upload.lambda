@@ -1,0 +1,111 @@
+const AWS = require('aws-sdk');
+const { v4: uuidv4 } = require('uuid');
+
+// Configure AWS SDK
+AWS.config.update({ region: process.env.AWS_REGION || 'eu-north-1' });
+
+const s3 = new AWS.S3();
+const dynamodb = new AWS.DynamoDB.DocumentClient();
+
+exports.handler = async (event) => {
+    console.log('Event:', JSON.stringify(event, null, 2));
+    
+    // Comprehensive CORS headers
+    const headers = {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Headers':'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+            'Access-Control-Allow-Credentials' : true,
+    };
+
+    // Handle preflight OPTIONS request
+    if (event.httpMethod === 'OPTIONS') {
+        return { 
+            statusCode: 200, 
+            headers, 
+            body: '' 
+        };
+    }
+
+    try {
+        console.log('Environment:', {
+            bucket: process.env.BUCKET_NAME,
+            table: process.env.TABLE_NAME,
+            region: process.env.AWS_REGION
+        });
+
+        const body = JSON.parse(event.body);
+        const { fileName, fileType, fileSize } = body;
+        
+        console.log('Request body:', { fileName, fileType, fileSize });
+        
+        if (!fileName || !fileType || !fileSize) {
+            throw new Error('Missing required fields');
+        }
+
+        if (fileSize > 100 * 1024 * 1024) {
+            throw new Error('File too large');
+        }
+
+        const fileId = uuidv4();
+        const s3Key = `${fileId}.${fileName.split('.').pop() || 'bin'}`;
+        
+        console.log('Generated:', { fileId, s3Key });
+
+        // Generate presigned URL (FIXED - removed invalid Conditions parameter)
+        const presignedUrl = s3.getSignedUrl('putObject', {
+            Bucket: process.env.BUCKET_NAME,
+            Key: s3Key,
+            ContentType: fileType,
+            Expires: 300
+        });
+
+        console.log('Generated presigned URL successfully');
+
+        // Save to DynamoDB
+        await dynamodb.put({
+            TableName: process.env.TABLE_NAME,
+            Item: {
+                fileId,
+                originalName: fileName,
+                s3Key,
+                contentType: fileType,
+                fileSize: Number(fileSize),
+                uploadDate: new Date().toISOString(),
+                downloadCount: 0,
+                status: 'pending'
+            }
+        }).promise();
+
+        console.log('Saved to DynamoDB successfully');
+
+        const shareUrl = `https://${event.requestContext.domainName}/f/${fileId}`;
+
+        console.log('Success response:', { fileId, shareUrl });
+
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                fileId,
+                presignedUrl,
+                shareUrl
+            })
+        };
+
+    } catch (error) {
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ 
+                error: error.message || 'Internal server error',
+                errorType: error.name || 'Unknown'
+            })
+        };
+    }
+};

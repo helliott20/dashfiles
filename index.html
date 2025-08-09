@@ -245,6 +245,8 @@
         html {
             /* Prevent horizontal scroll on mobile */
             overflow-x: hidden;
+            /* Allow vertical scroll naturally */
+            overflow-y: visible;
             /* Better mobile text rendering */
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
@@ -253,10 +255,13 @@
         body {
             /* Ensure proper mobile layout */
             min-height: 100vh;
-            /* Prevent horizontal overflow */
+            /* Prevent horizontal overflow but allow vertical */
             overflow-x: hidden;
+            overflow-y: visible;
             /* Better mobile scrolling */
             -webkit-overflow-scrolling: touch;
+            /* Prevent viewport issues */
+            position: relative;
         }
 
         /* Cookie Consent Banner Styles - Subtle Version */
@@ -1720,6 +1725,60 @@
                 width: 35px;
                 height: 35px;
             }
+            
+            /* Mobile result container optimizations */
+            .result-container {
+                padding: 25px;
+                margin-top: 15px;
+            }
+            
+            .result-title {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+            
+            .result-link {
+                padding: 12px;
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+            
+            .copy-btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                margin-right: 8px;
+                margin-bottom: 8px;
+            }
+            
+            .qr-section {
+                margin-top: 20px;
+                padding: 20px;
+            }
+            
+            .qr-title {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+            
+            .qr-container {
+                padding: 15px;
+                margin: 0 auto 12px;
+            }
+            
+            #qrcode canvas {
+                max-width: 180px !important;
+                height: auto !important;
+            }
+            
+            .qr-instruction {
+                font-size: 0.85rem;
+            }
+            
+            .disclaimer.compact {
+                margin-top: 20px;
+                padding: 18px;
+                font-size: 0.85rem;
+            }
 
             /* Cookie banner mobile styles - Subtle Version */
             .cookie-banner {
@@ -1809,6 +1868,78 @@
             .logo h1 {
                 font-size: 2rem;
             }
+            
+            /* Further mobile optimizations for success page */
+            .result-container {
+                padding: 20px;
+                margin-top: 12px;
+                border-radius: 16px;
+            }
+            
+            .result-title {
+                font-size: 1rem;
+                margin-bottom: 12px;
+                gap: 8px;
+            }
+            
+            .result-title svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .result-link {
+                padding: 10px;
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+                border-radius: 10px;
+            }
+            
+            /* Stack buttons vertically on small screens */
+            .copy-btn {
+                display: block;
+                width: 100%;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                margin: 0 0 8px 0;
+                border-radius: 10px;
+            }
+            
+            .qr-section {
+                margin-top: 15px;
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .qr-title {
+                font-size: 0.95rem;
+                margin-bottom: 10px;
+            }
+            
+            .qr-title svg {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .qr-container {
+                padding: 12px;
+                border-radius: 10px;
+            }
+            
+            #qrcode canvas {
+                max-width: 150px !important;
+                height: auto !important;
+            }
+            
+            .qr-instruction {
+                font-size: 0.8rem;
+            }
+            
+            .disclaimer.compact {
+                margin-top: 15px;
+                padding: 15px;
+                font-size: 0.8rem;
+                border-radius: 12px;
+            }
 
             .cookie-banner {
                 bottom: 15px;
@@ -1891,8 +2022,7 @@
                 padding: 35px 25px;
                 margin: 15px;
                 margin-top: 80px;
-                max-height: calc(100vh - 100px);
-                overflow-y: auto;
+                /* Removed max-height and overflow to allow natural scrolling */
             }
         }
 
@@ -1901,7 +2031,7 @@
                 padding: 25px 20px;
                 margin: 10px;
                 margin-top: 70px;
-                max-height: calc(100vh - 90px);
+                /* Removed max-height to allow natural scrolling */
             }
             
             .upload-zone {
@@ -1960,9 +2090,7 @@
                 border-radius: 20px;
                 /* Ensure container doesn't interfere with toggle button */
                 margin-top: 70px;
-                /* Better mobile viewport handling */
-                max-height: calc(100vh - 90px);
-                overflow-y: auto;
+                /* Removed max-height and overflow for natural scrolling */
             }
             
             .upload-zone {
@@ -1989,6 +2117,7 @@
                 padding: 10px;
                 /* Ensure no horizontal overflow */
                 overflow-x: hidden;
+                overflow-y: visible;
             }
             
             .container {
@@ -1996,8 +2125,7 @@
                 margin: 5px;
                 border-radius: 18px;
                 margin-top: 65px;
-                /* More aggressive mobile sizing */
-                max-height: calc(100vh - 80px);
+                /* Removed max-height for natural scrolling */
                 min-height: auto;
             }
             
@@ -2064,7 +2192,7 @@
             .container {
                 margin-top: 60px;
                 padding: 20px 12px;
-                max-height: calc(100vh - 75px);
+                /* Removed max-height for natural scrolling */
             }
             
             .upload-zone {
@@ -2104,6 +2232,56 @@
                 padding: 15px;
                 font-size: 0.8rem;
             }
+            
+            /* Extra small screen optimizations for success page */
+            .result-container {
+                padding: 15px;
+                margin-top: 10px;
+            }
+            
+            .result-title {
+                font-size: 0.95rem;
+                margin-bottom: 10px;
+            }
+            
+            .result-link {
+                padding: 8px;
+                font-size: 0.75rem;
+                word-break: break-all;
+            }
+            
+            .copy-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .qr-section {
+                margin-top: 12px;
+                padding: 12px;
+            }
+            
+            .qr-title {
+                font-size: 0.9rem;
+            }
+            
+            .qr-container {
+                padding: 10px;
+            }
+            
+            #qrcode canvas {
+                max-width: 120px !important;
+                height: auto !important;
+            }
+            
+            .qr-instruction {
+                font-size: 0.75rem;
+            }
+            
+            .disclaimer.compact {
+                margin-top: 12px;
+                padding: 12px;
+                font-size: 0.75rem;
+            }
         }
 
         /* Landscape mobile optimization */
@@ -2111,7 +2289,7 @@
             .container {
                 margin-top: 50px;
                 padding: 20px;
-                max-height: calc(100vh - 60px);
+                /* Removed max-height for natural scrolling */
             }
             
             .logo {
@@ -2145,6 +2323,51 @@
             
             .footer {
                 margin-top: 15px;
+            }
+            
+            /* Landscape optimizations for success page */
+            .result-container {
+                padding: 15px 20px;
+                margin-top: 10px;
+            }
+            
+            .result-title {
+                font-size: 0.95rem;
+                margin-bottom: 10px;
+            }
+            
+            .result-link {
+                padding: 8px;
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+            }
+            
+            .copy-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                display: inline-block;
+                width: auto;
+                margin-right: 8px;
+            }
+            
+            .qr-section {
+                margin-top: 10px;
+                padding: 10px;
+            }
+            
+            .qr-container {
+                padding: 8px;
+            }
+            
+            #qrcode canvas {
+                max-width: 100px !important;
+                height: auto !important;
+            }
+            
+            .disclaimer.compact {
+                margin-top: 10px;
+                padding: 10px;
+                font-size: 0.75rem;
             }
         }
 
@@ -2766,69 +2989,177 @@ function navigateToSuccess() {
             }
         });
 
-        // Updated file upload tracking
-async function handleFileUpload(file) {
-    // Track upload event for analytics (always enabled now)
-    trackEvent('file_upload_started', {
-        event_category: 'engagement',
-        file_size: file.size,
-        file_type: file.type
-    });
-
-    // Show loading state
-    loading.style.display = 'block';
-    progressContainer.style.display = 'block';
-    resultContainer.style.display = 'none';
-
-    try {
-        // Step 1: Get presigned URL from your API
-        const response = await fetch(`${CONFIG.API_ENDPOINT}/upload`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                fileName: file.name,
-                fileType: file.type,
-                fileSize: file.size
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to get upload URL');
+        // Function to detect MIME type from file extension if browser doesn't provide it
+        function detectMimeType(filename) {
+            const ext = filename.split('.').pop()?.toLowerCase();
+            const mimeTypes = {
+                // Images
+                'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'gif': 'image/gif',
+                'webp': 'image/webp', 'svg': 'image/svg+xml', 'bmp': 'image/bmp', 'tiff': 'image/tiff',
+                'tif': 'image/tiff', 'ico': 'image/x-icon',
+                // Videos
+                'mp4': 'video/mp4', 'avi': 'video/avi', 'mov': 'video/quicktime', 'wmv': 'video/x-ms-wmv',
+                'flv': 'video/x-flv', 'webm': 'video/webm', 'mkv': 'video/x-matroska', '3gp': 'video/3gpp',
+                'm4v': 'video/mp4',
+                // Audio
+                'mp3': 'audio/mpeg', 'wav': 'audio/wav', 'flac': 'audio/flac', 'aac': 'audio/aac',
+                'ogg': 'audio/ogg', 'm4a': 'audio/mp4', 'wma': 'audio/x-ms-wma',
+                // Documents
+                'pdf': 'application/pdf', 'doc': 'application/msword',
+                'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'xls': 'application/vnd.ms-excel',
+                'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'ppt': 'application/vnd.ms-powerpoint',
+                'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'odt': 'application/vnd.oasis.opendocument.text',
+                'ods': 'application/vnd.oasis.opendocument.spreadsheet',
+                'odp': 'application/vnd.oasis.opendocument.presentation',
+                // Text
+                'txt': 'text/plain', 'csv': 'text/csv', 'html': 'text/html', 'htm': 'text/html',
+                'css': 'text/css', 'js': 'text/javascript', 'json': 'application/json',
+                'xml': 'application/xml', 'md': 'text/markdown', 'rtf': 'application/rtf',
+                // Archives
+                'zip': 'application/zip', 'rar': 'application/x-rar-compressed',
+                '7z': 'application/x-7z-compressed', 'gz': 'application/gzip',
+                'tar': 'application/x-tar', 'bz2': 'application/x-bzip2'
+            };
+            return mimeTypes[ext] || 'application/octet-stream';
         }
 
-        const data = await response.json();
-        
-        // Step 2: Upload directly to S3 using presigned URL
-        await uploadToS3(file, data.presignedUrl, data.shareUrl);
-        
-    } catch (error) {
-        console.error('Upload error:', error);
-        showError('Upload failed. Please try again.');
-        
-        // Track error for analytics
-        trackEvent('file_upload_error', {
-            event_category: 'errors',
-            error_message: error.message
-        });
-    }
-}       
+        // Enhanced file upload function with better error handling and MIME type detection
+        async function handleFileUpload(file) {
+            console.log('Starting file upload:', { name: file.name, size: file.size, type: file.type });
 
-        async function uploadToS3(file, presignedUrl, shareUrl) {
+            // Validate file
+            if (!file || !file.name?.trim() || file.size === 0) {
+                showError('Invalid file selected');
+                return;
+            }
+
+            if (file.size > 100 * 1024 * 1024) {
+                showError('File size must be less than 100MB');
+                return;
+            }
+
+            // Detect MIME type if not provided or generic
+            let fileType = file.type;
+            if (!fileType || fileType === 'application/octet-stream' || fileType === '') {
+                fileType = detectMimeType(file.name);
+                console.log('Detected MIME type:', fileType, 'for file:', file.name);
+            }
+
+            // Track upload event for analytics
+            trackEvent('file_upload_started', {
+                event_category: 'engagement',
+                file_size: file.size,
+                file_type: fileType,
+                has_extension: file.name.includes('.'),
+                browser_detected_type: !!file.type
+            });
+
+            // Show loading state
+            loading.style.display = 'block';
+            progressContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+
+            try {
+                console.log('Requesting presigned URL...');
+                
+                // Get presigned URL with retry logic
+                let response;
+                let retries = 3;
+                
+                while (retries > 0) {
+                    try {
+                        response = await fetch(`${CONFIG.API_ENDPOINT}/upload`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                fileName: file.name.trim(),
+                                fileType: fileType,
+                                fileSize: file.size
+                            })
+                        });
+                        
+                        if (response.ok) break;
+                        
+                        if (response.status === 400 || response.status === 413) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Request failed');
+                        }
+                        
+                        throw new Error(`Server error: ${response.status}`);
+                        
+                    } catch (fetchError) {
+                        retries--;
+                        console.warn(`Fetch attempt failed (${retries} retries left):`, fetchError);
+                        
+                        if (retries === 0) throw fetchError;
+                        
+                        await new Promise(resolve => setTimeout(resolve, (3 - retries) * 1000));
+                    }
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (!data.success || !data.presignedUrl) {
+                    throw new Error(data.error || 'Invalid server response');
+                }
+                
+                // Upload to S3
+                console.log('Starting S3 upload...');
+                await uploadToS3(file, data.presignedUrl, data.shareUrl, fileType);
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                
+                let errorMessage = 'Upload failed. Please try again.';
+                if (error.message.includes('File too large') || error.message.includes('413')) {
+                    errorMessage = 'File is too large. Maximum size is 100MB.';
+                } else if (error.message.includes('Invalid file name') || error.message.includes('400')) {
+                    errorMessage = 'Invalid file name. Please rename your file and try again.';
+                } else if (error.message.includes('Network') || error.name === 'TypeError') {
+                    errorMessage = 'Network error. Please check your connection and try again.';
+                } else if (error.message.includes('timeout')) {
+                    errorMessage = 'Upload timed out. Please try again with a smaller file.';
+                }
+                
+                showError(errorMessage);
+                
+                trackEvent('file_upload_error', {
+                    event_category: 'errors',
+                    error_message: error.message,
+                    error_type: error.name || 'Unknown',
+                    file_size: file.size,
+                    file_type: fileType
+                });
+            }
+        }       
+
+        // Enhanced S3 upload with better error handling and content type setting
+        async function uploadToS3(file, presignedUrl, shareUrl, contentType) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
+                xhr.timeout = 300000; // 5 minutes
                 
                 // Track upload progress
                 xhr.upload.addEventListener('progress', (e) => {
                     if (e.lengthComputable) {
-                        const percentComplete = (e.loaded / e.total) * 100;
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
                         progressFill.style.width = percentComplete + '%';
+                        console.log(`Upload progress: ${percentComplete}%`);
                     }
                 });
 
                 xhr.addEventListener('load', () => {
-                    if (xhr.status === 200) {
+                    console.log('S3 upload response:', { 
+                        status: xhr.status, 
+                        statusText: xhr.statusText 
+                    });
+                    
+                    if (xhr.status === 200 || xhr.status === 204) {
                         // Upload successful
                         setTimeout(() => {
                             loading.style.display = 'none';
@@ -2836,7 +3167,6 @@ async function handleFileUpload(file) {
                             resultLink.textContent = shareUrl;
                             resultContainer.style.display = 'block';
                             
-                            // Hide upload zone to show results clearly
                             setTimeout(() => {
                                 uploadZone.classList.add('hidden');
                                 disclaimer.classList.add('compact');
@@ -2844,39 +3174,114 @@ async function handleFileUpload(file) {
                             
                             createSuccessParticles();
                             generateAnimatedQRCode(shareUrl);
-                            
-                            // Navigate to success URL for conversion tracking RIGHT when results are shown
                             navigateToSuccess();
                             
-                            // Track successful upload (only if consent given)
-                            if (typeof gtag !== 'undefined' && cookiePreferences.analytics) {
-                                gtag('event', 'file_upload_completed', {
-                                    event_category: 'engagement',
-                                    file_size: file.size
-                                });
-                            }
+                            trackEvent('file_upload_completed', {
+                                event_category: 'engagement',
+                                file_size: file.size,
+                                file_type: contentType,
+                                upload_time: Date.now() - (window.uploadStartTime || 0)
+                            });
                             
                             resolve();
                         }, 500);
                     } else {
-                        reject(new Error('Upload failed'));
+                        console.error('S3 upload failed:', xhr.status, xhr.statusText);
+                        reject(new Error(`Upload failed with status ${xhr.status}: ${xhr.statusText}`));
                     }
                 });
 
-                xhr.addEventListener('error', () => {
-                    reject(new Error('Upload failed'));
-                });
+                xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
+                xhr.addEventListener('timeout', () => reject(new Error('Upload timed out')));
+                xhr.addEventListener('abort', () => reject(new Error('Upload was cancelled')));
 
-                xhr.open('PUT', presignedUrl);
-                xhr.setRequestHeader('Content-Type', file.type);
-                xhr.send(file);
+                try {
+                    xhr.open('PUT', presignedUrl);
+                    
+                    if (contentType) {
+                        xhr.setRequestHeader('Content-Type', contentType);
+                        console.log('Set Content-Type header:', contentType);
+                    }
+                    
+                    window.uploadStartTime = Date.now();
+                    console.log('Sending file to S3...');
+                    xhr.send(file);
+                    
+                } catch (sendError) {
+                    console.error('Error starting S3 upload:', sendError);
+                    reject(new Error('Failed to start upload'));
+                }
             });
         }
 
+        // Enhanced error display with better UX
         function showError(message) {
             loading.style.display = 'none';
             progressContainer.style.display = 'none';
-            alert(message);
+            progressFill.style.width = '0%';
+            
+            // Remove any existing error messages
+            const existingErrors = document.querySelectorAll('.upload-error-toast');
+            existingErrors.forEach(error => error.remove());
+            
+            // Create better error display
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'upload-error-toast';
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+                z-index: 10000;
+                max-width: 400px;
+                animation: slideInRight 0.3s ease-out;
+                font-family: inherit;
+            `;
+            
+            errorDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/>
+                    </svg>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Upload Failed</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">${message}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 4px; opacity: 0.7; border-radius: 4px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">×</button>
+                </div>
+            `;
+            
+            // Add CSS for animation if not already present
+            if (!document.querySelector('#error-animation-styles')) {
+                const style = document.createElement('style');
+                style.id = 'error-animation-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    .upload-error-toast {
+                        animation: slideInRight 0.3s ease-out;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(errorDiv);
+            
+            // Auto-remove after 7 seconds
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => errorDiv.remove(), 300);
+                }
+            }, 7000);
+            
+            console.error('Upload error shown to user:', message);
         }
 
         // Updated copy link tracking
