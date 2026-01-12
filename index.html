@@ -126,10 +126,26 @@
 }
 </script>
 
-    <!-- Google Analytics - Only loaded after consent -->
-    <script id="gtag-script" data-src="https://www.googletagmanager.com/gtag/js?id=G-12WL2XFRJH"></script>
-    <script id="gtag-config">
-      // Google Analytics will be initialized only after user consent
+    <!-- Google Analytics - Consent Mode V2 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-12WL2XFRJH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Set default consent to denied (GDPR compliant)
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+      });
+
+      // Initialize GA4 immediately but without cookies
+      gtag('config', 'G-12WL2XFRJH', {
+        'anonymize_ip': true,
+        'allow_google_signals': false
+      });
     </script>
 
     <style>
@@ -166,6 +182,40 @@
             --toggle-border: rgba(30, 35, 50, 0.9);
             --toggle-icon: #f8fafc;
             --toggle-shadow: 0 8px 25px rgba(30, 35, 50, 0.4);
+
+            /* ===== SPACING SCALE ===== */
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --spacing-3xl: 64px;
+
+            /* Container Spacing */
+            --container-padding-desktop: var(--spacing-2xl);
+            --container-padding-mobile: var(--spacing-lg);
+
+            /* ===== BORDER RADIUS SCALE ===== */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --radius-3xl: 32px;
+
+            /* Component Radii */
+            --radius-container: var(--radius-3xl);
+            --radius-button: var(--radius-lg);
+            --radius-input: var(--radius-md);
+
+            /* ===== TYPOGRAPHY SCALE ===== */
+            --font-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+            --font-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+            --font-lg: clamp(1.125rem, 1rem + 0.625vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+            --font-2xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
         }
 
         [data-theme="dark"] {
@@ -215,6 +265,7 @@
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -243,26 +294,14 @@
 
          /* Mobile Viewport Fix */
         html {
-            /* Prevent horizontal scroll on mobile */
-            overflow-x: hidden;
-            /* Allow vertical scroll naturally */
-            overflow-y: visible;
+            /* Prevent all scrolling on html element */
+            overflow: hidden;
             /* Better mobile text rendering */
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
+            height: 100%;
         }
 
-        body {
-            /* Ensure proper mobile layout */
-            min-height: 100vh;
-            /* Prevent horizontal overflow but allow vertical */
-            overflow-x: hidden;
-            overflow-y: visible;
-            /* Better mobile scrolling */
-            -webkit-overflow-scrolling: touch;
-            /* Prevent viewport issues */
-            position: relative;
-        }
 
         /* Cookie Consent Banner Styles - Subtle Version */
         .cookie-banner {
@@ -773,14 +812,35 @@
             background: var(--bg-container);
             backdrop-filter: blur(20px);
             border-radius: 32px;
-            padding: 50px;
+            padding: 30px 40px;
             max-width: 650px;
-            width: 100%;
+            width: calc(100% - 30px);
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            overflow-x: hidden;
             box-shadow: var(--shadow-container);
             animation: containerEntrance 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            overflow: hidden;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-accent) transparent;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: var(--text-accent);
+            border-radius: 4px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
         }
 
         .container::before {
@@ -791,17 +851,11 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 3s infinite;
+            /* Shimmer effect removed */
         }
 
         [data-theme="dark"] .container::before {
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            animation: shimmer 6s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
         }
 
         @keyframes containerEntrance {
@@ -819,7 +873,7 @@
 
         .logo {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             animation: logoEntrance 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
 
@@ -837,30 +891,21 @@
         }
 
         .logo h1 {
-            font-size: 3rem;
+            font-size: 2.2rem;
             background: linear-gradient(135deg, #667eea, #764ba2, #667eea);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 800;
-            margin-bottom: 12px;
-            animation: textShimmer 4s ease-in-out infinite;
+            margin-bottom: 8px;
+            /* Text shimmer removed */
             letter-spacing: -2px;
-        }
-
-        @keyframes textShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        [data-theme="dark"] .logo h1 {
-            animation: textShimmer 8s ease-in-out infinite;
         }
 
         .logo p {
             color: var(--text-secondary);
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 500;
             opacity: 0;
             animation: fadeInUp 1s ease-out 0.8s both;
@@ -916,15 +961,17 @@
         .upload-zone {
             border: 2px dashed var(--border-primary);
             border-radius: 24px;
-            padding: 70px 50px;
+            padding: 40px 30px;
             text-align: center;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             position: relative;
             overflow: hidden;
             animation: uploadZoneEntrance 1.2s ease-out 0.6s both;
             background: var(--bg-upload-zone);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .upload-zone.hidden {
@@ -983,11 +1030,11 @@
         }
 
         .upload-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 30px;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1061,9 +1108,9 @@
         }
 
         .upload-text h2 {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             color: var(--text-primary);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             font-weight: 700;
             transition: all 0.8s ease;
         }
@@ -1088,9 +1135,9 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 16px 32px;
-            border-radius: 16px;
-            font-size: 1.1rem;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1121,6 +1168,95 @@
 
         .upload-btn:active {
             transform: translateY(-1px) scale(1.02);
+        }
+
+        /* ===== STANDARDIZED BUTTON SYSTEM ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-success:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-upload-hover);
+            border-color: var(--text-accent);
+            transform: translateY(-2px);
         }
 
         .progress-container {
@@ -1159,17 +1295,11 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: progressShimmer 2s infinite;
+            /* Progress shimmer removed */
         }
 
         [data-theme="dark"] .progress-bar::before {
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: progressShimmer 4s infinite;
-        }
-
-        @keyframes progressShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .progress-fill {
@@ -1190,17 +1320,11 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: fillShimmer 1.5s infinite;
+            /* Fill shimmer removed */
         }
 
         [data-theme="dark"] .progress-fill::after {
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: fillShimmer 3s infinite;
-        }
-
-        @keyframes fillShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .result-container {
@@ -1225,16 +1349,7 @@
             height: 2px;
             background: linear-gradient(90deg, #10b981, #059669, #10b981);
             background-size: 200% 100%;
-            animation: borderShimmer 2s infinite;
-        }
-
-        @keyframes borderShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        [data-theme="dark"] .result-container::before {
-            animation: borderShimmer 4s infinite;
+            /* Border shimmer removed */
         }
 
         @keyframes resultEntrance {
@@ -1470,6 +1585,26 @@
             margin: 20px 0;
             animation: buildingAnimation 1s ease-in-out infinite;
             transition: color 0.8s ease;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .qr-building .spinner {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+            border: 2px solid var(--border-primary);
+            border-top: 2px solid var(--text-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         [data-theme="dark"] .qr-building {
@@ -1528,12 +1663,12 @@
         }
 
         .disclaimer {
-            margin-top: 40px;
-            padding: 25px;
+            margin-top: 20px;
+            padding: 15px;
             background: var(--bg-disclaimer);
             border: 2px solid var(--border-disclaimer);
-            border-radius: 16px;
-            font-size: 0.95rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
             color: var(--text-disclaimer);
             font-weight: 500;
             animation: disclaimerEntrance 1s ease-out 1.5s both;
@@ -1558,10 +1693,10 @@
         }
 
         .footer {
-            margin-top: 50px;
+            margin-top: 20px;
             text-align: center;
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             animation: footerEntrance 1s ease-out 1.8s both;
             transition: color 0.8s ease;
         }
@@ -1695,6 +1830,11 @@
                 right: 20px;
                 width: 50px;
                 height: 50px;
+            }
+
+            .theme-indicator {
+                width: 20px;
+                height: 20px;
             }
 
             .theme-icon {
@@ -1852,6 +1992,11 @@
                 height: 45px;
             }
 
+            .theme-indicator {
+                width: 18px;
+                height: 18px;
+            }
+
             .theme-icon {
                 width: 18px;
                 height: 18px;
@@ -1975,78 +2120,6 @@
                         box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Mobile responsive adjustments */
-        @media (max-width: 768px) {
-            .theme-toggle {
-                top: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-            }
-
-            .theme-indicator {
-                width: 20px;
-                height: 20px;
-            }
-
-            .theme-icon {
-                width: 20px;
-                height: 20px;
-                stroke-width: 1.5;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .theme-toggle {
-                top: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-            }
-
-            .theme-indicator {
-                width: 18px;
-                height: 18px;
-            }
-
-            .theme-icon {
-                width: 18px;
-                height: 18px;
-                stroke-width: 1.5;
-            }
-        }
-
-        /* Mobile container fixes */
-        @media (max-width: 768px) {
-            .container {
-                padding: 35px 25px;
-                margin: 15px;
-                margin-top: 80px;
-                /* Removed max-height and overflow to allow natural scrolling */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px 20px;
-                margin: 10px;
-                margin-top: 70px;
-                /* Removed max-height to allow natural scrolling */
-            }
-            
-            .upload-zone {
-                padding: 30px 20px;
-            }
-            
-            .logo h1 {
-                font-size: 2rem;
-            }
-            
-            .logo p {
-                font-size: 1rem;
-            }
-        }
-
         @media (max-width: 360px) {
             .container {
                 margin: 8px;
@@ -2076,10 +2149,30 @@
             border-style: solid;
         }
 
-        /* Ensure accessibility on all screen sizes */
+        /* ===== ENHANCED ACCESSIBILITY FOCUS STATES ===== */
         .theme-toggle:focus-visible {
             outline: 2px solid var(--text-accent);
             outline-offset: 2px;
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--text-accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .upload-btn:focus-visible,
+        .copy-btn:focus-visible,
+        .cookie-btn:focus-visible,
+        .cookie-btn-accept:focus-visible,
+        .cookie-btn-settings:focus-visible {
+            outline: 3px solid var(--text-accent);
+            outline-offset: 4px;
+        }
+
+        .upload-zone:focus-visible {
+            outline: 3px dashed var(--text-accent);
+            outline-offset: -8px;
         }
 
         /* Additional mobile container adjustments */
@@ -2088,9 +2181,9 @@
                 padding: 30px 20px;
                 margin: 8px;
                 border-radius: 20px;
-                /* Ensure container doesn't interfere with toggle button */
                 margin-top: 70px;
-                /* Removed max-height and overflow for natural scrolling */
+                max-height: none;
+                overflow: visible;
             }
             
             .upload-zone {
@@ -2125,10 +2218,11 @@
                 margin: 5px;
                 border-radius: 18px;
                 margin-top: 65px;
-                /* Removed max-height for natural scrolling */
+                max-height: none;
+                overflow: visible;
                 min-height: auto;
             }
-            
+
             .upload-zone {
                 padding: 30px 16px;
                 border-radius: 16px;
@@ -2192,7 +2286,8 @@
             .container {
                 margin-top: 60px;
                 padding: 20px 12px;
-                /* Removed max-height for natural scrolling */
+                max-height: none;
+                overflow: visible;
             }
             
             .upload-zone {
@@ -2501,7 +2596,7 @@
             <input type="file" id="fileInput" class="file-input" multiple aria-label="Select files to upload">
         </section>
 
-        <div class="progress-container" id="progressContainer" role="progressbar" aria-label="Upload progress">
+        <div class="progress-container" id="progressContainer" role="progressbar" aria-label="Upload progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -2530,8 +2625,11 @@
                     </svg>
                     Scan with your phone
                 </div>
-                <div class="qr-building" id="qrBuilding">🔧 Building QR code...</div>
-                <div class="qr-container" id="qrContainer">
+                <div class="qr-building" id="qrBuilding">
+                    <div class="spinner"></div>
+                    Building QR code...
+                </div>
+                <div class="qr-container" id="qrContainer" aria-live="polite" aria-atomic="true">
                     <div id="qrcode" aria-label="QR code for file download"></div>
                 </div>
                 <div class="qr-instruction">Point your camera at the QR code to download the file</div>
@@ -2555,28 +2653,34 @@
             essential: true // Always true, cannot be disabled
         };
 
-// Updated checkCookieConsent function (no longer affects Analytics)
+// Check cookie consent and update GA4 consent accordingly
 function checkCookieConsent() {
-    // Always initialize analytics immediately
-    initializeAnalytics();
-    
     const consent = localStorage.getItem('dashfiles-cookie-consent');
-    if (!consent) {
-        // Show cookie banner for other cookies (not analytics)
+    if (consent) {
+        const preferences = JSON.parse(consent);
+        cookiePreferences = preferences;
+        if (preferences.analytics) {
+            // Update consent to granted
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted'
+            });
+        }
+    } else {
+        // Show banner after delay
         setTimeout(() => {
             document.getElementById('cookieBanner').classList.add('show');
         }, 3000);
-    } else {
-        const preferences = JSON.parse(consent);
-        cookiePreferences = preferences;
-        // Analytics is always on regardless of preferences
     }
 }
         function acceptCookies() {
             cookiePreferences.analytics = true;
             saveCookiePreferences();
             hideCookieBanner();
-            initializeAnalytics();
+
+            // Update consent to granted
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted'
+            });
         }
 
         function declineCookies() {
@@ -2599,6 +2703,16 @@ function checkCookieConsent() {
         function hideCookieSettings() {
             document.getElementById('cookieModal').classList.remove('show');
         }
+
+        // Add Escape key handler for cookie modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('cookieModal');
+                if (modal && modal.classList.contains('show')) {
+                    hideCookieSettings();
+                }
+            }
+        });
 
         function toggleAnalytics() {
             const toggle = document.getElementById('analyticsToggle');
@@ -2631,7 +2745,12 @@ function checkCookieConsent() {
         }
 
         function saveCookiePreferences() {
-            localStorage.setItem('dashfiles-cookie-consent', JSON.stringify(cookiePreferences));
+            try {
+                localStorage.setItem('dashfiles-cookie-consent', JSON.stringify(cookiePreferences));
+            } catch (e) {
+                console.warn('Failed to save cookie preferences to localStorage:', e);
+                // Continue without localStorage - cookies still work for this session
+            }
         }
 
         function hideCookieBanner() {
@@ -2644,36 +2763,8 @@ function checkCookieConsent() {
             }, 600);
         }
 
-        // Initialize Google Analytics immediately on page load
-function initializeAnalytics() {
-    // Only initialize if not already loaded
-    if (typeof gtag === 'undefined') {
-        // Load Google Analytics script
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_CONFIG.TRACKING_ID}`;
-        document.head.appendChild(script);
-
-        // Initialize gtag
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        window.gtag = gtag;
-        gtag('js', new Date());
-        gtag('config', GA_CONFIG.TRACKING_ID, {
-            page_title: document.title,
-            page_location: window.location.href,
-            // Additional config options
-            send_page_view: true,
-            anonymize_ip: false, // Set to true if you want IP anonymization
-            allow_google_signals: true,
-            allow_ad_personalization_signals: true
-        });
-
-        console.log('Google Analytics initialized with ID:', GA_CONFIG.TRACKING_ID);
-        return true;
-    }
-    return false;
-}
+        // GA4 is now initialized immediately in the head with consent mode
+        // No separate initialization function needed
 
 // Function to remove Google Analytics
 function removeAnalytics() {
@@ -2856,10 +2947,15 @@ function navigateToSuccess() {
             
             // Toggle theme
             currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Save to localStorage
-            localStorage.setItem('dashfiles-theme', currentTheme);
-            
+
+            // Save to localStorage with error handling
+            try {
+                localStorage.setItem('dashfiles-theme', currentTheme);
+            } catch (e) {
+                console.warn('Failed to save theme preference to localStorage:', e);
+                // Theme still works for current session
+            }
+
             // Add transition class for smooth change
             document.body.style.filter = 'blur(2px)';
             document.body.style.transform = 'scale(0.98)';
@@ -2936,6 +3032,28 @@ function navigateToSuccess() {
         TRACKING_ID: 'G-12WL2XFRJH', // Your current tracking ID
         CONVERSION_ID: 'AW-CONVERSION_ID', // Replace with your actual conversion ID
         CONVERSION_LABEL: 'CONVERSION_LABEL' // Replace with your actual conversion label
+        };
+
+        // UI Constants - Extracted magic numbers for maintainability
+        const UI_CONSTANTS = {
+            // Timeouts (in milliseconds)
+            COOKIE_BANNER_DELAY: 3000,
+            ERROR_AUTO_DISMISS: 7000,
+            SUCCESS_PARTICLE_DELAY: 50,
+            PARTICLE_LIFETIME: 12000,
+
+            // Performance limits
+            MAX_PARTICLES: 20,
+            TRAIL_THROTTLE: 50,
+            TRAIL_PROBABILITY: 0.05,
+
+            // Upload configuration
+            XHR_TIMEOUT: 120000, // 2 minutes
+            MAX_RETRY_ATTEMPTS: 3,
+
+            // UI dimensions
+            QR_CODE_SIZE: 180,
+            THEME_TRANSITION_DURATION: 200
         };
 
         const uploadZone = document.getElementById('uploadZone');
@@ -3027,7 +3145,20 @@ function navigateToSuccess() {
         }
 
         // Enhanced file upload function with better error handling and MIME type detection
+        // Store last failed file for retry functionality
+        let lastFailedFile = null;
+
+        function retryLastUpload() {
+            if (lastFailedFile) {
+                handleFileUpload(lastFailedFile);
+            }
+            // Remove all error toasts
+            document.querySelectorAll('.upload-error-toast').forEach(e => e.remove());
+        }
+
         async function handleFileUpload(file) {
+            // Store file for potential retry
+            lastFailedFile = file;
             console.log('Starting file upload:', { name: file.name, size: file.size, type: file.type });
 
             // Validate file
@@ -3142,13 +3273,18 @@ function navigateToSuccess() {
         async function uploadToS3(file, presignedUrl, shareUrl, contentType) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.timeout = 300000; // 5 minutes
+                xhr.timeout = 120000; // 2 minutes (reduced from 5 for better UX)
                 
                 // Track upload progress
                 xhr.upload.addEventListener('progress', (e) => {
                     if (e.lengthComputable) {
                         const percentComplete = Math.round((e.loaded / e.total) * 100);
                         progressFill.style.width = percentComplete + '%';
+
+                        // Update ARIA attributes for screen readers
+                        progressContainer.setAttribute('aria-valuenow', percentComplete);
+                        progressContainer.setAttribute('aria-valuetext', `${percentComplete}% uploaded`);
+
                         console.log(`Upload progress: ${percentComplete}%`);
                     }
                 });
@@ -3214,6 +3350,21 @@ function navigateToSuccess() {
             });
         }
 
+        // Sanitize HTML to prevent XSS attacks
+        function sanitizeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Update loading message dynamically
+        function updateLoadingMessage(message) {
+            const loadingMsg = document.getElementById('loading')?.querySelector('p');
+            if (loadingMsg) {
+                loadingMsg.textContent = message;
+            }
+        }
+
         // Enhanced error display with better UX
         function showError(message) {
             loading.style.display = 'none';
@@ -3229,7 +3380,7 @@ function navigateToSuccess() {
             errorDiv.className = 'upload-error-toast';
             errorDiv.style.cssText = `
                 position: fixed;
-                top: 20px;
+                top: 90px;
                 right: 20px;
                 background: linear-gradient(135deg, #ef4444, #dc2626);
                 color: white;
@@ -3247,9 +3398,12 @@ function navigateToSuccess() {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/>
                     </svg>
-                    <div>
+                    <div style="flex: 1;">
                         <div style="font-weight: 600; margin-bottom: 4px;">Upload Failed</div>
-                        <div style="font-size: 0.9em; opacity: 0.9;">${message}</div>
+                        <div style="font-size: 0.9em; opacity: 0.9; margin-bottom: 8px;">${sanitizeHTML(message)}</div>
+                        <button onclick="retryLastUpload()" style="padding: 6px 12px; background: white; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85em; transition: all 0.2s;">
+                            Retry Upload
+                        </button>
                     </div>
                     <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 4px; opacity: 0.7; border-radius: 4px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">×</button>
                 </div>
@@ -3445,6 +3599,10 @@ function copyToClipboard() {
                 // Handle successful load
                 img.onload = () => {
                     qrElement.appendChild(img);
+
+                    // Announce to screen readers
+                    qrContainer.setAttribute('aria-label', 'QR code loaded successfully. Scan with your phone to download the file.');
+
                     setTimeout(() => {
                         animateQRCodeReveal(img);
                     }, 300);
@@ -3526,13 +3684,24 @@ function copyToClipboard() {
         }
 
         // Enhanced particle system
+        // Particle system with memory leak prevention
+        const MAX_PARTICLES = 20;
+        let activeParticleCount = 0;
+        let particleInterval = null;
+
         function createAdvancedParticle() {
+            // Check particle limit to prevent memory leak
+            if (activeParticleCount >= MAX_PARTICLES) {
+                return;
+            }
+
+            activeParticleCount++;
             const particle = document.createElement('div');
             const size = Math.random() * 6 + 2;
             const hue = currentTheme === 'dark' ? 230 : 220; // Adjust hue based on theme
             const saturation = currentTheme === 'dark' ? 70 : 60;
             const lightness = currentTheme === 'dark' ? 70 : 60;
-            
+
             particle.className = 'advanced-particle';
             particle.style.cssText = `
                 width: ${size}px;
@@ -3544,32 +3713,47 @@ function copyToClipboard() {
                 animation: advancedFloat ${8 + Math.random() * 4}s linear forwards;
                 box-shadow: 0 0 ${size * 2}px hsla(${hue}, ${saturation}%, ${lightness}%, 0.3);
             `;
-            
+
             document.body.appendChild(particle);
-            
+
             setTimeout(() => {
                 particle.remove();
+                activeParticleCount--; // Decrement counter when particle is removed
             }, 12000);
         }
 
         // Create advanced particles
-        setInterval(createAdvancedParticle, 2000);
+        particleInterval = setInterval(createAdvancedParticle, 2000);
 
-        // Mouse trail effect
+        // Pause particles when page is hidden to save resources
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(particleInterval);
+            } else {
+                particleInterval = setInterval(createAdvancedParticle, 2000);
+            }
+        });
+
+        // Mouse trail effect with throttling to prevent DOM bloat
         let mouseTrail = [];
+        let lastTrailTime = 0;
+        const TRAIL_THROTTLE = 50; // ms between trail particles
+
         document.addEventListener('mousemove', (e) => {
-            mouseTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
-            
+            const now = Date.now();
+            mouseTrail.push({ x: e.clientX, y: e.clientY, time: now });
+
             // Keep only recent trail points
-            mouseTrail = mouseTrail.filter(point => Date.now() - point.time < 500);
-            
-            // Create trail particle occasionally
-            if (Math.random() < 0.1) {
+            mouseTrail = mouseTrail.filter(point => now - point.time < 500);
+
+            // Throttle trail creation and reduce probability to prevent performance issues
+            if (now - lastTrailTime > TRAIL_THROTTLE && Math.random() < 0.05) {
+                lastTrailTime = now;
                 const trail = document.createElement('div');
-                const trailColor = currentTheme === 'dark' ? 
-                    'rgba(129, 140, 248, 0.5)' : 
+                const trailColor = currentTheme === 'dark' ?
+                    'rgba(129, 140, 248, 0.5)' :
                     'rgba(102, 126, 234, 0.4)';
-                
+
                 trail.style.cssText = `
                     position: fixed;
                     left: ${e.clientX}px;
@@ -3582,7 +3766,7 @@ function copyToClipboard() {
                     z-index: -1;
                     animation: trailFade 500ms ease-out forwards;
                 `;
-                
+
                 document.body.appendChild(trail);
                 setTimeout(() => trail.remove(), 500);
             }
