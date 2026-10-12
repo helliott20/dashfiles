@@ -3273,7 +3273,16 @@ function navigateToSuccess() {
         async function uploadToS3(file, presignedUrl, shareUrl, contentType) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.timeout = 120000; // 2 minutes (reduced from 5 for better UX)
+                // Scale the timeout with file size (assume at least ~50 KB/s, minimum 5 minutes).
+                // A fixed 2 minutes cut off large uploads on slower connections, leaving
+                // records whose file never reached storage.
+                xhr.timeout = Math.max(5 * 60 * 1000, Math.ceil(file.size / (50 * 1024)) * 1000);
+
+                // Warn before leaving mid-upload, which would also strand the record
+                const warnOnLeave = (e) => { e.preventDefault(); e.returnValue = ''; };
+                window.addEventListener('beforeunload', warnOnLeave);
+                const stopWarning = () => window.removeEventListener('beforeunload', warnOnLeave);
+                xhr.addEventListener('loadend', stopWarning);
                 
                 // Track upload progress
                 xhr.upload.addEventListener('progress', (e) => {
@@ -3344,6 +3353,7 @@ function navigateToSuccess() {
                     xhr.send(file);
                     
                 } catch (sendError) {
+                    stopWarning();
                     console.error('Error starting S3 upload:', sendError);
                     reject(new Error('Failed to start upload'));
                 }
