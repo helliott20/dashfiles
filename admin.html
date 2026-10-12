@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="DashFiles Admin">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="robots" content="noindex, nofollow">
     <title>DashFiles Admin</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -98,6 +103,15 @@
         }
 
         [hidden] { display: none !important; }
+
+        button, select, input[type="checkbox"], .legend-item, .file-row {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        @media (min-width: 641px) {
+            .mobile-only { display: none !important; }
+        }
 
         .visually-hidden {
             position: absolute;
@@ -813,50 +827,170 @@
         }
 
         @media (max-width: 640px) {
-            .container { padding: 16px; }
-            .header { padding: 12px 16px; }
-            .brand p, .last-updated { display: none; }
+            .desktop-only { display: none !important; }
 
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .stat-card { padding: 16px; }
+            .container {
+                padding: 12px max(12px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+            }
+
+            /* Header: compact, respects the notch */
+            .header {
+                padding: calc(10px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
+            }
+            .brand h1 { font-size: 1.0625rem; }
+            .brand p, .last-updated { display: none; }
+            .header-actions { gap: 6px; }
+            .btn-icon, #logoutButton { width: 40px; height: 40px; padding: 0; justify-content: center; }
+            #logoutButton .btn-label { display: none; }
+
+            /* iOS zooms into inputs smaller than 16px */
+            .input, .select { font-size: 16px; min-height: 44px; }
+
+            .login-box { padding: 28px 20px; }
+            .login-box .btn { min-height: 48px; font-size: 1rem; }
+            .remember { min-height: 44px; margin-bottom: 8px; }
+
+            /* Stats: two compact columns */
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+            .stat-card { padding: 14px; min-width: 0; }
+            .stat-card > div { min-width: 0; }
             .stat-icon { display: none; }
             .stat-number { font-size: 1.375rem; }
+            .stat-label { font-size: 0.6875rem; }
+            .stat-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-            .controls .select { flex: 1; min-width: 0; }
-            #exportButton .btn-label { display: none; }
-            #exportButton { padding: 10px 12px; }
-            .search-wrap { flex-basis: 100%; }
+            .breakdown { padding: 14px; margin-bottom: 8px; }
+            .breakdown-head { flex-direction: column; gap: 2px; }
+            .breakdown-head span:last-child { font-weight: 500; color: var(--text-muted); font-size: 0.75rem; }
+            .breakdown-legend { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 8px; }
+            .legend-item { min-height: 32px; margin: 0 -6px; padding: 0 6px; }
+
+            /* Controls: 2x2 grid under a full-width search */
+            .controls {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                padding: 10px;
+                margin-bottom: 8px;
+            }
+            .search-wrap { grid-column: 1 / -1; min-width: 0; }
+            .controls .select { width: 100%; min-width: 0; }
+            #exportButton { justify-content: center; min-height: 44px; }
             .kbd { display: none; }
 
+            /* Table becomes a list of cards */
             .table-header { display: none; }
+            .table-toolbar { padding: 8px 12px; min-height: 52px; gap: 8px; }
+            .toolbar-start { display: flex; align-items: center; gap: 10px; min-width: 0; }
+            #resultSummary { min-width: 0; }
 
             .row-grid {
-                grid-template-columns: 24px 1fr auto;
+                grid-template-columns: 24px minmax(0, 1fr) 40px;
                 grid-template-areas:
                     "check name actions"
-                    ".     meta meta";
-                gap: 6px 12px;
-                padding: 12px 16px;
+                    "check meta actions";
+                gap: 2px 10px;
+                padding: 10px 8px 10px 12px;
             }
+            .file-row { cursor: pointer; }
             .file-row > .checkbox { grid-area: check; }
             .file-row > .file-name { grid-area: name; }
             .file-row > .file-actions { grid-area: actions; }
             .file-row > .col-size,
             .file-row > .col-date { display: none; }
+            .file-row .file-id { display: none; }
+            .file-icon { width: 36px; height: 36px; }
             .mobile-meta {
                 display: block !important;
                 grid-area: meta;
                 font-size: 0.75rem;
                 color: var(--text-muted);
+                padding-left: 46px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
-            .file-actions .action-btn.copy,
-            .file-actions .action-btn.view { display: none; }
+            .file-actions .action-btn:not(.more) { display: none; }
+            .action-btn { width: 40px; height: 40px; }
 
-            .table-toolbar, .table-footer { padding: 10px 16px; }
+            /* Taps anywhere in the row's left gutter toggle the checkbox (see JS) */
+            .checkbox { width: 22px; height: 22px; margin: 0; }
+            .select-all-mobile { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 44px; margin-left: -4px; cursor: pointer; }
 
-            .toasts { left: 16px; right: 16px; bottom: 16px; }
+            /* Selection bar docks to the bottom of the screen */
+            .table-toolbar.has-selection {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 60;
+                background: var(--surface);
+                border-top: 1px solid var(--border);
+                border-bottom: none;
+                box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+                padding: 10px max(12px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+                animation: slideUp 0.2s ease;
+            }
+            .table-toolbar.has-selection #resultSummary .link-btn { display: block; margin-top: 2px; }
+            .toolbar-actions .btn { min-height: 40px; }
+            #clearSelectionButton { display: none; }
+            body.has-selection .container { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+
+            /* Pager: big, thumb-friendly buttons */
+            .table-footer { flex-direction: column; align-items: stretch; padding: 12px; text-align: center; }
+            .pager { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+            .pager .btn, .pager .select { min-height: 44px; justify-content: center; font-size: 0.875rem; }
+            .pager .select { order: 2; }
+            #prevPage { order: 1; }
+            #nextPage { order: 3; }
+
+            /* Dialogs become bottom sheets */
+            .modal-backdrop { align-items: flex-end; padding: 0; }
+            .modal {
+                max-width: none;
+                border-radius: 16px 16px 0 0;
+                border-bottom: none;
+                padding: 20px max(20px, env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+                animation: slideUp 0.22s ease;
+            }
+            .modal-actions { flex-direction: column-reverse; }
+            .modal-actions .btn { justify-content: center; min-height: 48px; font-size: 1rem; }
+
+            .toasts { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); align-items: stretch; }
+            body.has-selection .toasts { bottom: calc(84px + env(safe-area-inset-bottom)); }
             .toast { min-width: 0; }
         }
+
+        /* Touch screens have no hover; don't leave rows stuck highlighted */
+        @media (hover: none) {
+            .file-row:not(.selected):hover { background: transparent; }
+            .action-btn:hover { background: transparent; color: var(--text-secondary); }
+            .btn-ghost:hover, .btn-icon:hover { background: var(--surface); }
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* File details sheet */
+        .sheet-head { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+        .sheet-head .file-icon { width: 44px; height: 44px; font-size: 0.6875rem; }
+        .sheet-head h2 { margin: 0; font-size: 1rem; overflow-wrap: anywhere; }
+        .sheet-details {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 6px 16px;
+            font-size: 0.8125rem;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--background);
+            border-radius: var(--radius);
+        }
+        .sheet-details dt { color: var(--text-muted); }
+        .sheet-details dd { color: var(--text-secondary); overflow-wrap: anywhere; }
+        .sheet-details dd code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; }
+        .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .sheet-actions .btn { justify-content: center; min-height: 48px; }
+        .sheet-actions .btn-danger { grid-column: 1 / -1; }
+        .sheet-close { grid-column: 1 / -1; }
 
         .mobile-meta { display: none; }
     </style>
@@ -896,7 +1030,10 @@
                     <button class="btn btn-icon" id="themeButton" title="Toggle theme" aria-label="Toggle theme">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                     </button>
-                    <button class="btn btn-ghost" id="logoutButton">Sign out</button>
+                    <button class="btn btn-ghost" id="logoutButton" aria-label="Sign out" title="Sign out">
+                        <svg class="mobile-only" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <span class="btn-label">Sign out</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -973,6 +1110,18 @@
                     <option value="month">Last 30 days</option>
                     <option value="older">Older than 30 days</option>
                 </select>
+                <label for="mobileSort" class="visually-hidden">Sort by</label>
+                <select class="select mobile-only" id="mobileSort">
+                    <option value="uploadDate:desc">Newest first</option>
+                    <option value="uploadDate:asc">Oldest first</option>
+                    <option value="fileSize:desc">Largest first</option>
+                    <option value="fileSize:asc">Smallest first</option>
+                    <option value="downloadCount:desc">Most downloaded</option>
+                    <option value="downloadCount:asc">Least downloaded</option>
+                    <option value="originalName:asc">Name A–Z</option>
+                    <option value="originalName:desc">Name Z–A</option>
+                    <option value="contentType:asc">Type</option>
+                </select>
                 <button class="btn btn-ghost" id="exportButton" title="Export filtered files as CSV" aria-label="Export CSV">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     <span class="btn-label">Export CSV</span>
@@ -982,7 +1131,12 @@
             <!-- Files Table -->
             <section class="table-wrap" aria-label="Files">
                 <div class="table-toolbar" id="tableToolbar">
-                    <span id="resultSummary" aria-live="polite">Loading…</span>
+                    <div class="toolbar-start">
+                        <label class="select-all-mobile mobile-only">
+                            <input type="checkbox" class="checkbox" id="selectAllMobile" aria-label="Select all on this page">
+                        </label>
+                        <span id="resultSummary" aria-live="polite">Loading…</span>
+                    </div>
                     <div class="toolbar-actions" id="selectionActions" hidden>
                         <button class="btn btn-ghost" id="clearSelectionButton">Clear</button>
                         <button class="btn btn-danger" id="deleteSelectedButton">
@@ -1043,6 +1197,7 @@
             view: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
             copy: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
             download: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+            more: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>',
             delete: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
         };
 
@@ -1205,6 +1360,68 @@
             });
         }
 
+        // Bottom sheet with a file's details and every action; the phone layout
+        // hides the per-row buttons behind this.
+        function openDetails(fileId) {
+            const file = findFile(fileId);
+            if (!file) return;
+            const previousFocus = document.activeElement;
+            const category = getFileCategory(file.contentType);
+            const ext = getExtension(file.originalName);
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            backdrop.innerHTML = `
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+                    <div class="sheet-head">
+                        <div class="file-icon bg-${category}" aria-hidden="true">${escapeHtml(ext && ext.length <= 4 ? ext : CATEGORIES[category].short)}</div>
+                        <h2 id="sheetTitle">${escapeHtml(file.originalName || 'Untitled')}</h2>
+                    </div>
+                    <dl class="sheet-details">
+                        <dt>Type</dt><dd>${escapeHtml(file.contentType || 'Unknown')}</dd>
+                        <dt>Size</dt><dd>${formatFileSize(file.fileSize || 0)}</dd>
+                        <dt>Downloads</dt><dd>${(file.downloadCount || 0).toLocaleString()}</dd>
+                        <dt>Uploaded</dt><dd>${escapeHtml(formatDate(file.uploadDate))}</dd>
+                        <dt>File ID</dt><dd><code>${escapeHtml(file.fileId)}</code></dd>
+                    </dl>
+                    <div class="sheet-actions">
+                        <button class="btn btn-ghost" data-sheet="view">${ICONS.view} Open</button>
+                        <button class="btn btn-ghost" data-sheet="copy">${ICONS.copy} Copy link</button>
+                        <button class="btn btn-ghost" data-sheet="download">${ICONS.download} Download</button>
+                        <button class="btn btn-ghost" data-sheet="select">${state.selected.has(fileId) ? 'Deselect' : 'Select'}</button>
+                        <button class="btn btn-danger" data-sheet="delete">${ICONS.delete} Delete</button>
+                        <button class="btn btn-ghost sheet-close" data-sheet="close">Close</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(backdrop);
+            backdrop.querySelector('[data-sheet="close"]').focus();
+
+            const close = () => {
+                document.removeEventListener('keydown', onKey, true);
+                backdrop.remove();
+                if (previousFocus && previousFocus.isConnected) previousFocus.focus();
+            };
+            const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+            document.addEventListener('keydown', onKey, true);
+            backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) return close();
+                const btn = e.target.closest('[data-sheet]');
+                if (!btn) return;
+                const action = btn.dataset.sheet;
+                close();
+                switch (action) {
+                    case 'view': window.open(shareUrl(fileId), '_blank', 'noopener'); break;
+                    case 'copy': copyLink(fileId); break;
+                    case 'download': downloadFile(fileId); break;
+                    case 'delete': deleteOne(fileId); break;
+                    case 'select':
+                        if (state.selected.has(fileId)) state.selected.delete(fileId);
+                        else state.selected.add(fileId);
+                        updateSelectionUI();
+                        break;
+                }
+            });
+        }
+
         // ---------- API ----------
 
         class AuthError extends Error {}
@@ -1306,6 +1523,7 @@
             clearStoredPassword();
             state.files = [];
             state.selected.clear();
+            document.body.classList.remove('has-selection');
             showLogin();
         }
 
@@ -1497,6 +1715,9 @@
                 indicator.classList.toggle('active', active);
                 btn.setAttribute('aria-sort', active ? (state.sort.direction === 'asc' ? 'ascending' : 'descending') : 'none');
             });
+            const mobileValue = `${state.sort.field}:${state.sort.direction}`;
+            const mobileSort = $('mobileSort');
+            if ([...mobileSort.options].some(o => o.value === mobileValue)) mobileSort.value = mobileValue;
         }
 
         // ---------- Rendering ----------
@@ -1580,6 +1801,7 @@
                         <button class="action-btn copy" data-action="copy" title="Copy share link" aria-label="Copy share link for ${name}">${ICONS.copy}</button>
                         <button class="action-btn download" data-action="download" title="Download" aria-label="Download ${name}">${ICONS.download}</button>
                         <button class="action-btn delete" data-action="delete" title="Delete" aria-label="Delete ${name}">${ICONS.delete}</button>
+                        <button class="action-btn more mobile-only" data-action="details" aria-label="Actions for ${name}">${ICONS.more}</button>
                     </div>
                 </div>`;
         }
@@ -1593,6 +1815,7 @@
 
             toolbar.classList.toggle('has-selection', selectedCount > 0);
             $('selectionActions').hidden = selectedCount === 0;
+            document.body.classList.toggle('has-selection', selectedCount > 0);
 
             if (selectedCount > 0) {
                 const selectedSize = state.files
@@ -1629,6 +1852,10 @@
             selectAll.checked = pageFiles.length > 0 && selectedOnPage === pageFiles.length;
             selectAll.indeterminate = selectedOnPage > 0 && selectedOnPage < pageFiles.length;
             selectAll.disabled = pageFiles.length === 0;
+            const mobile = $('selectAllMobile');
+            mobile.checked = selectAll.checked;
+            mobile.indeterminate = selectAll.indeterminate;
+            mobile.disabled = selectAll.disabled;
         }
 
         function updateSelectionUI() {
@@ -1843,6 +2070,18 @@
             document.querySelectorAll('.sortable-header').forEach(btn =>
                 btn.addEventListener('click', () => setSort(btn.dataset.sort)));
 
+            $('mobileSort').addEventListener('change', (e) => {
+                const [field, direction] = e.target.value.split(':');
+                state.sort = { field, direction };
+                updateSortIndicators();
+                applyFilters();
+            });
+
+            $('selectAllMobile').addEventListener('change', (e) => {
+                $('selectAll').checked = e.target.checked;
+                $('selectAll').dispatchEvent(new Event('change'));
+            });
+
             $('selectAll').addEventListener('change', (e) => {
                 for (const f of currentPageFiles()) {
                     if (e.target.checked) state.selected.add(f.fileId);
@@ -1877,6 +2116,7 @@
                     case 'copy': copyLink(fileId); break;
                     case 'download': downloadFile(fileId, target); break;
                     case 'delete': deleteOne(fileId); break;
+                    case 'details': openDetails(fileId); break;
                     case 'clear-filters': clearFilters(); break;
                     case 'retry': refreshData(); break;
                     case 'select-all-filtered':
@@ -1884,6 +2124,22 @@
                         updateSelectionUI();
                         break;
                 }
+            });
+
+            // Phone layout: tapping a row opens its details sheet
+            const mobileQuery = matchMedia('(max-width: 640px)');
+            $('filesContainer').addEventListener('click', (e) => {
+                if (!mobileQuery.matches || e.target.closest('[data-action], button, input, a')) return;
+                const row = e.target.closest('.file-row[data-id]');
+                if (!row) return;
+                // The checkbox itself is small; treat the whole left gutter as its tap target
+                if (e.clientX - row.getBoundingClientRect().left < 48) {
+                    const id = row.dataset.id;
+                    if (state.selected.has(id)) state.selected.delete(id); else state.selected.add(id);
+                    updateSelectionUI();
+                    return;
+                }
+                openDetails(row.dataset.id);
             });
 
             // Shift-click a checkbox to select a range on the current page
