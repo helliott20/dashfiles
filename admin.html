@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>DashFiles Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #eff6ff;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --danger-light: #fef2f2;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --purple: #8b5cf6;
+            --secondary: #64748b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --surface: #ffffff;
+            --surface-hover: #f8fafc;
+            --surface-selected: #eff6ff;
+            --background: #f8fafc;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.15s ease;
+            color-scheme: light;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --primary: #60a5fa;
+                --primary-dark: #3b82f6;
+                --primary-light: rgba(96, 165, 250, 0.12);
+                --danger-light: rgba(239, 68, 68, 0.12);
+                --success-light: rgba(16, 185, 129, 0.12);
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #64748b;
+                --border: #334155;
+                --border-light: #1e293b;
+                --surface: #0f172a;
+                --surface-hover: #1e293b;
+                --surface-selected: rgba(96, 165, 250, 0.1);
+                --background: #020617;
+                --header-bg: rgba(15, 23, 42, 0.9);
+                color-scheme: dark;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --primary-light: rgba(96, 165, 250, 0.12);
+            --danger-light: rgba(239, 68, 68, 0.12);
+            --success-light: rgba(16, 185, 129, 0.12);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #334155;
+            --border-light: #1e293b;
+            --surface: #0f172a;
+            --surface-hover: #1e293b;
+            --surface-selected: rgba(96, 165, 250, 0.1);
+            --background: #020617;
+            --header-bg: rgba(15, 23, 42, 0.9);
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            line-height: 1.5;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        [hidden] { display: none !important; }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* ---------- Login ---------- */
+
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .login-box {
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 4px;
+        }
+
+        .login-box p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 24px;
+        }
+
+        .login-box label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .login-box .input {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .login-box .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.8125rem;
+            margin-bottom: 12px;
+            min-height: 1.2em;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        /* ---------- Header ---------- */
+
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 14px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.8125rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-right: 4px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* ---------- Buttons & inputs ---------- */
+
+        .btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            font: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            background: none;
+            color: inherit;
+        }
+
+        .btn svg { flex-shrink: 0; }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: var(--danger-dark); }
+
+        .btn-ghost {
+            border-color: var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+        .btn-icon {
+            padding: 9px;
+            border-color: var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+        }
+        .btn-icon:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .spin { animation: spin 0.8s linear infinite; }
+
+        .input, .select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font: inherit;
+            font-size: 0.875rem;
+            background: var(--surface);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .input::placeholder { color: var(--text-muted); }
+
+        .select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 34px;
+        }
+
+        /* ---------- Stats ---------- */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xs);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.025em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-sub {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 6px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Storage breakdown */
+
+        .breakdown {
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xs);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+
+        .breakdown-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .breakdown-bar {
+            display: flex;
+            height: 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: var(--border-light);
+            gap: 2px;
+        }
+
+        .breakdown-bar span { display: block; height: 100%; min-width: 3px; }
+
+        .breakdown-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            margin-top: 10px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 2px 4px;
+            margin: -2px -4px;
+            border-radius: 4px;
+        }
+
+        .legend-item:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        .bg-image { background: var(--success); }
+        .bg-video { background: var(--info); }
+        .bg-audio { background: var(--purple); }
+        .bg-document { background: var(--warning); }
+        .bg-other { background: var(--secondary); }
+
+        /* ---------- Controls ---------- */
+
+        .controls {
+            background: var(--surface);
+            padding: 12px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xs);
+            margin-bottom: 16px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-wrap .input {
+            width: 100%;
+            padding-left: 38px;
+            padding-right: 40px;
+        }
+
+        .kbd {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 6px;
+            pointer-events: none;
+        }
+
+        /* ---------- Table ---------- */
+
+        .table-wrap {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xs);
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border-light);
+            min-height: 52px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .table-toolbar.has-selection {
+            background: var(--surface-selected);
+        }
+
+        .toolbar-actions { display: flex; gap: 8px; }
+
+        .toolbar-actions .btn { padding: 6px 12px; font-size: 0.8125rem; }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .link-btn:hover { text-decoration: underline; }
+
+        .row-grid {
+            display: grid;
+            grid-template-columns: 32px minmax(220px, 1fr) 100px 90px 100px 130px 132px;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 20px;
+        }
+
+        .table-header {
+            background: var(--background);
+            border-bottom: 1px solid var(--border-light);
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sortable-header {
+            all: unset;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            margin: -2px -6px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .sortable-header:hover { color: var(--primary); background: var(--primary-light); }
+        .sortable-header:focus-visible { outline: 2px solid var(--primary); }
+
+        .sort-indicator { font-size: 0.75rem; opacity: 0.4; }
+        .sort-indicator.active { opacity: 1; color: var(--primary); }
+
+        .num { text-align: right; justify-content: flex-end; }
+
+        .file-row {
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.1s ease;
+        }
+
+        .file-row:last-child { border-bottom: none; }
+        .file-row:hover { background: var(--surface-hover); }
+        .file-row.selected { background: var(--surface-selected); }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .file-name-text { min-width: 0; }
+
+        .file-name-text strong {
+            display: block;
+            font-weight: 500;
+            font-size: 0.875rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-id {
+            display: block;
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-type {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            justify-self: start;
+        }
+
+        .file-type.image { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+        .file-type.video { background: rgba(6, 182, 212, 0.12); color: var(--info); }
+        .file-type.audio { background: rgba(139, 92, 246, 0.12); color: var(--purple); }
+        .file-type.document { background: rgba(245, 158, 11, 0.14); color: #d97706; }
+        .file-type.other { background: rgba(100, 116, 139, 0.12); color: var(--secondary); }
+
+        .cell {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cell small {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover { background: var(--primary-light); color: var(--primary); }
+        .action-btn.delete:hover { background: var(--danger-light); color: var(--danger); }
+        .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 10px 20px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .pager { display: flex; align-items: center; gap: 8px; }
+        .pager .btn { padding: 6px 10px; font-size: 0.8125rem; }
+        .pager .select { padding: 6px 30px 6px 10px; font-size: 0.8125rem; }
+
+        .empty-state, .loading, .error-state {
+            text-align: center;
+            padding: 64px 20px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .empty-state h3, .error-state h3 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .empty-state .btn, .error-state .btn { margin-top: 16px; }
+
+        .error-state h3 { color: var(--danger); }
+
+        .skeleton-row .sk {
+            height: 12px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--border-light) 25%, var(--border) 50%, var(--border-light) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+        }
+
+        @keyframes shimmer { to { background-position: -200% 0; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---------- Toasts ---------- */
+
+        .toasts {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 200;
+            max-width: calc(100vw - 32px);
+        }
+
+        .toast {
+            background: var(--text-primary);
+            color: var(--surface);
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 240px;
+            animation: toastIn 0.2s ease;
+        }
+
+        .toast .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--success); }
+        .toast.error .dot { background: var(--danger); }
+        .toast.info .dot { background: var(--primary); }
+        .toast.leaving { opacity: 0; transform: translateY(8px); transition: all 0.2s ease; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- Modal ---------- */
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 150;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 24px;
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--border-light);
+        }
+
+        .modal h2 { font-size: 1.125rem; margin-bottom: 8px; }
+
+        .modal p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+        .progress {
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: var(--danger);
+            transition: width 0.2s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ---------- Responsive ---------- */
+
+        @media (max-width: 960px) {
+            .row-grid {
+                grid-template-columns: 32px minmax(180px, 1fr) 90px 90px 132px;
+            }
+            .col-downloads, .col-type { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 16px; }
+            .header { padding: 12px 16px; }
+            .brand p, .last-updated { display: none; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .stat-card { padding: 16px; }
+            .stat-icon { display: none; }
+            .stat-number { font-size: 1.375rem; }
+
+            .controls .select { flex: 1; min-width: 0; }
+            #exportButton .btn-label { display: none; }
+            #exportButton { padding: 10px 12px; }
+            .search-wrap { flex-basis: 100%; }
+            .kbd { display: none; }
+
+            .table-header { display: none; }
+
+            .row-grid {
+                grid-template-columns: 24px 1fr auto;
+                grid-template-areas:
+                    "check name actions"
+                    ".     meta meta";
+                gap: 6px 12px;
+                padding: 12px 16px;
+            }
+            .file-row > .checkbox { grid-area: check; }
+            .file-row > .file-name { grid-area: name; }
+            .file-row > .file-actions { grid-area: actions; }
+            .file-row > .col-size,
+            .file-row > .col-date { display: none; }
+            .mobile-meta {
+                display: block !important;
+                grid-area: meta;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+            }
+            .file-actions .action-btn.copy,
+            .file-actions .action-btn.view { display: none; }
+
+            .table-toolbar, .table-footer { padding: 10px 16px; }
+
+            .toasts { left: 16px; right: 16px; bottom: 16px; }
+            .toast { min-width: 0; }
+        }
+
+        .mobile-meta { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <main class="login-screen" id="loginScreen" hidden>
+        <form class="login-box" id="loginForm" autocomplete="on">
+            <h1>DashFiles Admin</h1>
+            <p>Enter the admin password to continue.</p>
+            <!-- Hidden username helps password managers associate the credential -->
+            <input type="text" name="username" value="admin" autocomplete="username" hidden>
+            <label for="passwordInput">Password</label>
+            <input type="password" class="input" id="passwordInput" autocomplete="current-password" required autofocus>
+            <div class="login-error" id="loginError" role="alert"></div>
+            <label class="remember">
+                <input type="checkbox" class="checkbox" id="rememberMe">
+                Keep me signed in on this device
+            </label>
+            <button type="submit" class="btn btn-primary" id="loginButton">Sign in</button>
+        </form>
+    </main>
+
+    <!-- Admin Content -->
+    <div id="adminContent" hidden>
+        <header class="header">
+            <div class="header-inner">
+                <div class="brand">
+                    <h1>DashFiles Admin</h1>
+                    <p>Content management</p>
+                </div>
+                <div class="header-actions">
+                    <span class="last-updated" id="lastUpdated" aria-live="polite"></span>
+                    <button class="btn btn-icon" id="refreshButton" title="Refresh (R)" aria-label="Refresh">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                    </button>
+                    <button class="btn btn-icon" id="themeButton" title="Toggle theme" aria-label="Toggle theme">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button class="btn btn-ghost" id="logoutButton">Sign out</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Statistics -->
+            <section class="stats-grid" aria-label="Statistics">
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-number" id="totalFiles">–</div>
+                        <div class="stat-label">Total files</div>
+                        <div class="stat-sub" id="totalFilesSub">&nbsp;</div>
+                    </div>
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-number" id="totalSize">–</div>
+                        <div class="stat-label">Storage used</div>
+                        <div class="stat-sub" id="totalSizeSub">&nbsp;</div>
+                    </div>
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-number" id="totalDownloads">–</div>
+                        <div class="stat-label">Total downloads</div>
+                        <div class="stat-sub" id="totalDownloadsSub">&nbsp;</div>
+                    </div>
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-number" id="todayUploads">–</div>
+                        <div class="stat-label">Uploads today</div>
+                        <div class="stat-sub" id="todayUploadsSub">&nbsp;</div>
+                    </div>
+                    <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                </div>
+            </section>
+
+            <!-- Storage breakdown by type -->
+            <section class="breakdown" id="breakdown" hidden aria-label="Storage by type">
+                <div class="breakdown-head">
+                    <span>Storage by type</span>
+                    <span id="breakdownTotal"></span>
+                </div>
+                <div class="breakdown-bar" id="breakdownBar"></div>
+                <div class="breakdown-legend" id="breakdownLegend"></div>
+            </section>
+
+            <!-- Controls -->
+            <section class="controls" aria-label="Filters">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <label for="searchInput" class="visually-hidden">Search files</label>
+                    <input type="search" class="input" placeholder="Search by name or file ID…" id="searchInput" autocomplete="off">
+                    <span class="kbd" aria-hidden="true">/</span>
+                </div>
+                <label for="typeFilter" class="visually-hidden">File type</label>
+                <select class="select" id="typeFilter">
+                    <option value="">All types</option>
+                    <option value="image">Images</option>
+                    <option value="video">Videos</option>
+                    <option value="audio">Audio</option>
+                    <option value="document">Documents</option>
+                    <option value="other">Other</option>
+                </select>
+                <label for="dateFilter" class="visually-hidden">Upload date</label>
+                <select class="select" id="dateFilter">
+                    <option value="">Any date</option>
+                    <option value="today">Today</option>
+                    <option value="week">Last 7 days</option>
+                    <option value="month">Last 30 days</option>
+                    <option value="older">Older than 30 days</option>
+                </select>
+                <button class="btn btn-ghost" id="exportButton" title="Export filtered files as CSV" aria-label="Export CSV">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span class="btn-label">Export CSV</span>
+                </button>
+            </section>
+
+            <!-- Files Table -->
+            <section class="table-wrap" aria-label="Files">
+                <div class="table-toolbar" id="tableToolbar">
+                    <span id="resultSummary" aria-live="polite">Loading…</span>
+                    <div class="toolbar-actions" id="selectionActions" hidden>
+                        <button class="btn btn-ghost" id="clearSelectionButton">Clear</button>
+                        <button class="btn btn-danger" id="deleteSelectedButton">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            Delete selected
+                        </button>
+                    </div>
+                </div>
+                <div class="row-grid table-header" role="row">
+                    <input type="checkbox" class="checkbox" id="selectAll" aria-label="Select all on this page">
+                    <button class="sortable-header" data-sort="originalName">File name <span class="sort-indicator" data-indicator="originalName">⇅</span></button>
+                    <button class="sortable-header col-type" data-sort="contentType">Type <span class="sort-indicator" data-indicator="contentType">⇅</span></button>
+                    <button class="sortable-header num col-size" data-sort="fileSize">Size <span class="sort-indicator" data-indicator="fileSize">⇅</span></button>
+                    <button class="sortable-header num col-downloads" data-sort="downloadCount">Downloads <span class="sort-indicator" data-indicator="downloadCount">⇅</span></button>
+                    <button class="sortable-header col-date" data-sort="uploadDate">Uploaded <span class="sort-indicator" data-indicator="uploadDate">⇅</span></button>
+                    <span class="num">Actions</span>
+                </div>
+                <div id="filesContainer"></div>
+                <div class="table-footer" id="tableFooter" hidden>
+                    <span id="pageInfo"></span>
+                    <div class="pager">
+                        <label for="pageSize" class="visually-hidden">Rows per page</label>
+                        <select class="select" id="pageSize">
+                            <option value="25">25 / page</option>
+                            <option value="50" selected>50 / page</option>
+                            <option value="100">100 / page</option>
+                            <option value="0">All</option>
+                        </select>
+                        <button class="btn btn-ghost" id="prevPage" aria-label="Previous page">‹ Prev</button>
+                        <button class="btn btn-ghost" id="nextPage" aria-label="Next page">Next ›</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+    <script>
+        // Configuration. The admin password is NOT stored here: it is entered at
+        // sign-in and checked by the API on every request.
+        const CONFIG = {
+            API_ENDPOINT: 'https://p52pxaqka1.execute-api.eu-north-1.amazonaws.com/prod',
+            STORAGE_KEY: 'dashfiles-admin-token',
+            THEME_KEY: 'dashfiles-admin-theme',
+            DELETE_CONCURRENCY: 4
+        };
+
+        const CATEGORIES = {
+            image: { label: 'Images', short: 'IMG' },
+            video: { label: 'Videos', short: 'VID' },
+            audio: { label: 'Audio', short: 'AUD' },
+            document: { label: 'Documents', short: 'DOC' },
+            other: { label: 'Other', short: 'FILE' }
+        };
+
+        const ICONS = {
+            view: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+            copy: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+            download: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+            delete: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+        };
+
+        // ---------- State ----------
+
+        const state = {
+            password: null,
+            files: [],
+            filtered: [],
+            selected: new Set(),
+            sort: { field: 'uploadDate', direction: 'desc' },
+            page: 1,
+            pageSize: 50,
+            bucketSize: null,
+            loading: false
+        };
+
+        const $ = (id) => document.getElementById(id);
+
+        // ---------- Utilities ----------
+
+        // Every user-controlled value (file names, IDs, content types) goes through
+        // this before reaching innerHTML: file names come straight from uploaders.
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes || bytes <= 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), sizes.length - 1);
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(i === 0 ? 0 : 1)) + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            if (isNaN(date)) return 'Unknown';
+            return date.toLocaleString(undefined, {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function formatRelative(dateString) {
+            if (!dateString) return '';
+            const diff = (Date.now() - new Date(dateString).getTime()) / 1000;
+            if (isNaN(diff)) return '';
+            const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+            const steps = [[60, 'second'], [3600, 'minute'], [86400, 'hour'], [604800, 'day'], [2629800, 'week'], [31557600, 'month'], [Infinity, 'year']];
+            const divisors = { second: 1, minute: 60, hour: 3600, day: 86400, week: 604800, month: 2629800, year: 31557600 };
+            for (const [limit, unit] of steps) {
+                if (Math.abs(diff) < limit) return rtf.format(-Math.round(diff / divisors[unit]), unit);
+            }
+            return '';
+        }
+
+        function getFileCategory(contentType) {
+            if (!contentType) return 'other';
+            if (contentType.startsWith('image/')) return 'image';
+            if (contentType.startsWith('video/')) return 'video';
+            if (contentType.startsWith('audio/')) return 'audio';
+            if (contentType.includes('pdf') || contentType.includes('document') || contentType.includes('text') ||
+                contentType.includes('sheet') || contentType.includes('presentation') || contentType.includes('msword')) return 'document';
+            return 'other';
+        }
+
+        function getExtension(name) {
+            const match = /\.([a-z0-9]{1,5})$/i.exec(name || '');
+            return match ? match[1] : null;
+        }
+
+        function shareUrl(fileId) {
+            return `${CONFIG.API_ENDPOINT}/f/${encodeURIComponent(fileId)}`;
+        }
+
+        function debounce(fn, ms) {
+            let t;
+            return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+        }
+
+        // ---------- Toasts & modal ----------
+
+        function toast(message, type = 'success', timeout = 3500) {
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+            el.innerHTML = '<span class="dot"></span><span></span>';
+            el.lastChild.textContent = message;
+            $('toasts').appendChild(el);
+            setTimeout(() => {
+                el.classList.add('leaving');
+                setTimeout(() => el.remove(), 200);
+            }, timeout);
+        }
+
+        // Returns a promise resolving to true/false. Pass `onConfirm` to keep the
+        // modal open while async work runs; it receives a progress setter.
+        function confirmDialog({ title, message, confirmLabel = 'Delete', onConfirm }) {
+            return new Promise((resolve) => {
+                const previousFocus = document.activeElement;
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop';
+                backdrop.innerHTML = `
+                    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+                        <h2 id="modalTitle"></h2>
+                        <p id="modalMessage"></p>
+                        <div class="progress" hidden><span></span></div>
+                        <div class="modal-actions">
+                            <button class="btn btn-ghost" data-action="cancel">Cancel</button>
+                            <button class="btn btn-danger" data-action="confirm"></button>
+                        </div>
+                    </div>`;
+                backdrop.querySelector('h2').textContent = title;
+                backdrop.querySelector('p').textContent = message;
+                const confirmBtn = backdrop.querySelector('[data-action="confirm"]');
+                const cancelBtn = backdrop.querySelector('[data-action="cancel"]');
+                confirmBtn.textContent = confirmLabel;
+                document.body.appendChild(backdrop);
+                cancelBtn.focus();
+
+                let busy = false;
+                const close = (result) => {
+                    document.removeEventListener('keydown', onKey, true);
+                    backdrop.remove();
+                    if (previousFocus && previousFocus.focus) previousFocus.focus();
+                    resolve(result);
+                };
+                const onKey = (e) => {
+                    if (e.key === 'Escape' && !busy) { e.stopPropagation(); close(false); }
+                    if (e.key === 'Tab') {
+                        // Keep focus inside the dialog
+                        const items = [cancelBtn, confirmBtn].filter(b => !b.disabled);
+                        const idx = items.indexOf(document.activeElement);
+                        e.preventDefault();
+                        items[(idx + (e.shiftKey ? -1 : 1) + items.length) % items.length]?.focus();
+                    }
+                };
+                document.addEventListener('keydown', onKey, true);
+                backdrop.addEventListener('click', (e) => { if (e.target === backdrop && !busy) close(false); });
+                cancelBtn.addEventListener('click', () => close(false));
+                confirmBtn.addEventListener('click', async () => {
+                    if (!onConfirm) return close(true);
+                    busy = true;
+                    confirmBtn.disabled = cancelBtn.disabled = true;
+                    confirmBtn.textContent = 'Deleting…';
+                    const bar = backdrop.querySelector('.progress');
+                    const setProgress = (fraction) => {
+                        bar.hidden = false;
+                        bar.firstElementChild.style.width = `${Math.round(fraction * 100)}%`;
+                    };
+                    try {
+                        await onConfirm(setProgress);
+                    } finally {
+                        close(true);
+                    }
+                });
+            });
+        }
+
+        // ---------- API ----------
+
+        class AuthError extends Error {}
+
+        async function api(path, options = {}) {
+            const response = await fetch(`${CONFIG.API_ENDPOINT}${path}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Admin-Password': state.password,
+                    ...(options.headers || {})
+                }
+            });
+            if (response.status === 401) {
+                throw new AuthError('Invalid admin password');
+            }
+            return response;
+        }
+
+        async function fetchFiles() {
+            const response = await api('/f/admin/files');
+            if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+            const data = await response.json();
+            state.bucketSize = typeof data.bucketSize === 'number' ? data.bucketSize : null;
+            return Array.isArray(data.files) ? data.files : [];
+        }
+
+        async function deleteFileRequest(fileId) {
+            const response = await api(`/f/admin/delete/${encodeURIComponent(fileId)}`, { method: 'DELETE' });
+            if (!response.ok) {
+                const body = await response.json().catch(() => ({}));
+                throw new Error(body.error || `Delete failed: ${response.status}`);
+            }
+        }
+
+        // ---------- Auth ----------
+
+        function readStoredPassword() {
+            try {
+                return sessionStorage.getItem(CONFIG.STORAGE_KEY) || localStorage.getItem(CONFIG.STORAGE_KEY);
+            } catch { return null; }
+        }
+
+        function storePassword(password, remember) {
+            try {
+                sessionStorage.setItem(CONFIG.STORAGE_KEY, password);
+                if (remember) localStorage.setItem(CONFIG.STORAGE_KEY, password);
+            } catch { /* storage unavailable: stay signed in for this page only */ }
+        }
+
+        function clearStoredPassword() {
+            try {
+                sessionStorage.removeItem(CONFIG.STORAGE_KEY);
+                localStorage.removeItem(CONFIG.STORAGE_KEY);
+            } catch { /* ignore */ }
+        }
+
+        function showLogin(message = '') {
+            state.password = null;
+            $('adminContent').hidden = true;
+            $('loginScreen').hidden = false;
+            $('loginError').textContent = message;
+            $('passwordInput').value = '';
+            $('passwordInput').focus();
+        }
+
+        function showDashboard() {
+            $('loginScreen').hidden = true;
+            $('adminContent').hidden = false;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const password = $('passwordInput').value;
+            if (!password) return;
+            const button = $('loginButton');
+            button.disabled = true;
+            button.textContent = 'Signing in…';
+            $('loginError').textContent = '';
+            state.password = password;
+            try {
+                state.files = await fetchFiles();
+                storePassword(password, $('rememberMe').checked);
+                showDashboard();
+                onDataLoaded();
+            } catch (error) {
+                state.password = null;
+                $('loginError').textContent = error instanceof AuthError
+                    ? 'Incorrect password. Please try again.'
+                    : `Could not reach the API: ${error.message}`;
+                $('passwordInput').select();
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Sign in';
+            }
+        }
+
+        function logout() {
+            clearStoredPassword();
+            state.files = [];
+            state.selected.clear();
+            showLogin();
+        }
+
+        // ---------- Data loading ----------
+
+        async function refreshData({ silent = false } = {}) {
+            if (state.loading) return;
+            state.loading = true;
+            const button = $('refreshButton');
+            button.disabled = true;
+            button.querySelector('svg').classList.add('spin');
+            if (!state.files.length) renderSkeleton();
+
+            try {
+                state.files = await fetchFiles();
+                onDataLoaded();
+                if (!silent) toast('Files refreshed', 'info', 2000);
+            } catch (error) {
+                if (error instanceof AuthError) {
+                    clearStoredPassword();
+                    showLogin('Your session has expired. Please sign in again.');
+                    return;
+                }
+                console.error('Error loading files:', error);
+                if (state.files.length) {
+                    toast(`Refresh failed: ${error.message}`, 'error');
+                } else {
+                    renderError(error.message);
+                }
+            } finally {
+                state.loading = false;
+                button.disabled = false;
+                button.querySelector('svg').classList.remove('spin');
+            }
+        }
+
+        function onDataLoaded() {
+            // Drop selections for files that no longer exist
+            const ids = new Set(state.files.map(f => f.fileId));
+            for (const id of state.selected) if (!ids.has(id)) state.selected.delete(id);
+            $('lastUpdated').textContent = `Updated ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+            updateStats();
+            applyFilters();
+        }
+
+        // ---------- Stats ----------
+
+        function updateStats() {
+            const files = state.files;
+            const totalSize = files.reduce((sum, f) => sum + (f.fileSize || 0), 0);
+            const totalDownloads = files.reduce((sum, f) => sum + (f.downloadCount || 0), 0);
+            const todayStr = new Date().toDateString();
+            const weekAgo = Date.now() - 7 * 86400000;
+            const today = files.filter(f => f.uploadDate && new Date(f.uploadDate).toDateString() === todayStr);
+            const week = files.filter(f => f.uploadDate && new Date(f.uploadDate).getTime() >= weekAgo);
+            const neverDownloaded = files.filter(f => !f.downloadCount).length;
+            const top = files.reduce((best, f) => (f.downloadCount || 0) > (best?.downloadCount || 0) ? f : best, null);
+
+            $('totalFiles').textContent = files.length.toLocaleString();
+            $('totalFilesSub').textContent = files.length ? `${neverDownloaded.toLocaleString()} never downloaded` : ' ';
+
+            // Prefer the bucket size reported by the API; it includes orphaned objects
+            $('totalSize').textContent = formatFileSize(state.bucketSize ?? totalSize);
+            $('totalSizeSub').textContent = files.length ? `Avg ${formatFileSize(totalSize / files.length)} per file` : ' ';
+
+            $('totalDownloads').textContent = totalDownloads.toLocaleString();
+            $('totalDownloadsSub').textContent = top && top.downloadCount ? `Top: ${top.originalName || top.fileId}` : ' ';
+            $('totalDownloadsSub').title = top?.originalName || '';
+
+            $('todayUploads').textContent = today.length.toLocaleString();
+            $('todayUploadsSub').textContent = `${week.length.toLocaleString()} in the last 7 days · ${formatFileSize(today.reduce((s, f) => s + (f.fileSize || 0), 0))} today`;
+
+            renderBreakdown(totalSize);
+        }
+
+        function renderBreakdown(totalSize) {
+            const section = $('breakdown');
+            if (!totalSize) { section.hidden = true; return; }
+            const byType = {};
+            for (const key of Object.keys(CATEGORIES)) byType[key] = { size: 0, count: 0 };
+            for (const f of state.files) {
+                const cat = getFileCategory(f.contentType);
+                byType[cat].size += f.fileSize || 0;
+                byType[cat].count++;
+            }
+            const entries = Object.entries(byType).filter(([, v]) => v.count > 0).sort((a, b) => b[1].size - a[1].size);
+            $('breakdownTotal').textContent = `${formatFileSize(totalSize)} across ${state.files.length.toLocaleString()} files`;
+            $('breakdownBar').innerHTML = entries.map(([cat, v]) =>
+                `<span class="bg-${cat}" style="flex:${v.size || 0.0001}" title="${CATEGORIES[cat].label}: ${formatFileSize(v.size)}"></span>`
+            ).join('');
+            $('breakdownLegend').innerHTML = entries.map(([cat, v]) => `
+                <button class="legend-item" data-filter-type="${cat}" title="Show only ${CATEGORIES[cat].label.toLowerCase()}">
+                    <span class="legend-dot bg-${cat}"></span>
+                    ${CATEGORIES[cat].label} · ${v.count.toLocaleString()} · ${formatFileSize(v.size)} (${Math.round(v.size / totalSize * 100)}%)
+                </button>`).join('');
+            section.hidden = false;
+        }
+
+        // ---------- Filtering, sorting, paging ----------
+
+        function matchesDate(uploadDate, filter) {
+            if (!filter) return true;
+            if (!uploadDate) return false;
+            const date = new Date(uploadDate);
+            const age = Date.now() - date.getTime();
+            switch (filter) {
+                case 'today': return date.toDateString() === new Date().toDateString();
+                case 'week': return age <= 7 * 86400000;
+                case 'month': return age <= 30 * 86400000;
+                case 'older': return age > 30 * 86400000;
+                default: return true;
+            }
+        }
+
+        function sortFiles(files) {
+            const { field, direction } = state.sort;
+            const dir = direction === 'asc' ? 1 : -1;
+            const value = (f) => {
+                switch (field) {
+                    case 'fileSize':
+                    case 'downloadCount': return f[field] || 0;
+                    case 'uploadDate': return f.uploadDate ? new Date(f.uploadDate).getTime() : 0;
+                    case 'contentType': return getFileCategory(f.contentType);
+                    default: return (f[field] || '').toLowerCase();
+                }
+            };
+            return [...files].sort((a, b) => {
+                const av = value(a), bv = value(b);
+                const cmp = typeof av === 'string' ? av.localeCompare(bv, undefined, { numeric: true }) : av - bv;
+                return cmp * dir;
+            });
+        }
+
+        function applyFilters({ resetPage = false } = {}) {
+            const term = $('searchInput').value.trim().toLowerCase();
+            const type = $('typeFilter').value;
+            const date = $('dateFilter').value;
+
+            state.filtered = sortFiles(state.files.filter(f =>
+                (!term || (f.originalName || '').toLowerCase().includes(term) || (f.fileId || '').toLowerCase().includes(term)) &&
+                (!type || getFileCategory(f.contentType) === type) &&
+                matchesDate(f.uploadDate, date)
+            ));
+
+            if (resetPage) state.page = 1;
+            const pages = totalPages();
+            if (state.page > pages) state.page = pages;
+            renderFiles();
+        }
+
+        function totalPages() {
+            return state.pageSize ? Math.max(1, Math.ceil(state.filtered.length / state.pageSize)) : 1;
+        }
+
+        function currentPageFiles() {
+            if (!state.pageSize) return state.filtered;
+            const start = (state.page - 1) * state.pageSize;
+            return state.filtered.slice(start, start + state.pageSize);
+        }
+
+        function hasActiveFilters() {
+            return Boolean($('searchInput').value.trim() || $('typeFilter').value || $('dateFilter').value);
+        }
+
+        function clearFilters() {
+            $('searchInput').value = '';
+            $('typeFilter').value = '';
+            $('dateFilter').value = '';
+            applyFilters({ resetPage: true });
+        }
+
+        function setSort(field) {
+            if (state.sort.field === field) {
+                state.sort.direction = state.sort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Numbers and dates are most useful largest/newest first
+                state.sort = { field, direction: ['fileSize', 'downloadCount', 'uploadDate'].includes(field) ? 'desc' : 'asc' };
+            }
+            updateSortIndicators();
+            applyFilters();
+        }
+
+        function updateSortIndicators() {
+            document.querySelectorAll('.sortable-header').forEach(btn => {
+                const field = btn.dataset.sort;
+                const active = field === state.sort.field;
+                const indicator = btn.querySelector('.sort-indicator');
+                indicator.textContent = active ? (state.sort.direction === 'asc' ? '↑' : '↓') : '⇅';
+                indicator.classList.toggle('active', active);
+                btn.setAttribute('aria-sort', active ? (state.sort.direction === 'asc' ? 'ascending' : 'descending') : 'none');
+            });
+        }
+
+        // ---------- Rendering ----------
+
+        function renderSkeleton() {
+            $('tableFooter').hidden = true;
+            $('resultSummary').textContent = 'Loading files…';
+            $('filesContainer').innerHTML = Array.from({ length: 6 }, () => `
+                <div class="row-grid file-row skeleton-row" aria-hidden="true">
+                    <div class="sk" style="width:16px"></div>
+                    <div class="sk" style="width:60%"></div>
+                    <div class="sk col-type" style="width:50px"></div>
+                    <div class="sk col-size"></div>
+                    <div class="sk col-downloads"></div>
+                    <div class="sk col-date"></div>
+                    <div class="sk"></div>
+                </div>`).join('');
+        }
+
+        function renderError(message) {
+            $('tableFooter').hidden = true;
+            $('resultSummary').textContent = 'Could not load files';
+            $('filesContainer').innerHTML = `
+                <div class="error-state">
+                    <h3>Could not load files</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <button class="btn btn-primary" data-action="retry">Try again</button>
+                </div>`;
+        }
+
+        function renderFiles() {
+            const container = $('filesContainer');
+            const pageFiles = currentPageFiles();
+
+            if (state.filtered.length === 0) {
+                const filtered = hasActiveFilters();
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>${filtered ? 'No files match your filters' : 'No files yet'}</h3>
+                        <p>${filtered ? 'Try a different search term or clear the filters.' : 'Uploaded files will appear here.'}</p>
+                        ${filtered ? '<button class="btn btn-ghost" data-action="clear-filters">Clear filters</button>' : ''}
+                    </div>`;
+            } else {
+                container.innerHTML = pageFiles.map(renderRow).join('');
+            }
+
+            renderSummary();
+            renderPager();
+            syncSelectAll();
+        }
+
+        function renderRow(file) {
+            const id = escapeHtml(file.fileId);
+            const name = escapeHtml(file.originalName || 'Untitled');
+            const category = getFileCategory(file.contentType);
+            const ext = getExtension(file.originalName);
+            const iconText = escapeHtml(ext && ext.length <= 4 ? ext : CATEGORIES[category].short);
+            const selected = state.selected.has(file.fileId);
+            const downloads = (file.downloadCount || 0).toLocaleString();
+
+            return `
+                <div class="row-grid file-row${selected ? ' selected' : ''}" data-id="${id}">
+                    <input type="checkbox" class="checkbox" data-action="select" ${selected ? 'checked' : ''} aria-label="Select ${name}">
+                    <div class="file-name">
+                        <div class="file-icon bg-${category}" aria-hidden="true">${iconText}</div>
+                        <div class="file-name-text">
+                            <strong title="${name}">${name}</strong>
+                            <span class="file-id" title="${escapeHtml(file.contentType || '')}">${id}</span>
+                        </div>
+                    </div>
+                    <span class="file-type ${category} col-type">${category}</span>
+                    <div class="cell num col-size">${formatFileSize(file.fileSize || 0)}</div>
+                    <div class="cell num col-downloads">${downloads}</div>
+                    <div class="cell col-date" title="${escapeHtml(formatDate(file.uploadDate))}">
+                        ${escapeHtml(formatRelative(file.uploadDate) || 'Unknown')}
+                        <small>${escapeHtml(file.uploadDate ? new Date(file.uploadDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '')}</small>
+                    </div>
+                    <div class="mobile-meta">${formatFileSize(file.fileSize || 0)} · ${downloads} download${file.downloadCount === 1 ? '' : 's'} · ${escapeHtml(formatRelative(file.uploadDate))}</div>
+                    <div class="file-actions">
+                        <button class="action-btn view" data-action="view" title="Open share page" aria-label="Open share page for ${name}">${ICONS.view}</button>
+                        <button class="action-btn copy" data-action="copy" title="Copy share link" aria-label="Copy share link for ${name}">${ICONS.copy}</button>
+                        <button class="action-btn download" data-action="download" title="Download" aria-label="Download ${name}">${ICONS.download}</button>
+                        <button class="action-btn delete" data-action="delete" title="Delete" aria-label="Delete ${name}">${ICONS.delete}</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderSummary() {
+            const total = state.files.length;
+            const shown = state.filtered.length;
+            const selectedCount = state.selected.size;
+            const toolbar = $('tableToolbar');
+            const summary = $('resultSummary');
+
+            toolbar.classList.toggle('has-selection', selectedCount > 0);
+            $('selectionActions').hidden = selectedCount === 0;
+
+            if (selectedCount > 0) {
+                const selectedSize = state.files
+                    .filter(f => state.selected.has(f.fileId))
+                    .reduce((s, f) => s + (f.fileSize || 0), 0);
+                const allFilteredSelected = shown > 0 && state.filtered.every(f => state.selected.has(f.fileId));
+                summary.innerHTML = `<strong>${selectedCount.toLocaleString()}</strong> selected (${formatFileSize(selectedSize)})` +
+                    (!allFilteredSelected && shown > currentPageFiles().length
+                        ? ` · <button class="link-btn" data-action="select-all-filtered">Select all ${shown.toLocaleString()} matching</button>`
+                        : '');
+            } else if (shown === total) {
+                summary.textContent = `${total.toLocaleString()} file${total === 1 ? '' : 's'}`;
+            } else {
+                summary.innerHTML = `${shown.toLocaleString()} of ${total.toLocaleString()} files · <button class="link-btn" data-action="clear-filters">Clear filters</button>`;
+            }
+        }
+
+        function renderPager() {
+            const footer = $('tableFooter');
+            if (!state.filtered.length) { footer.hidden = true; return; }
+            footer.hidden = false;
+            const pages = totalPages();
+            const start = state.pageSize ? (state.page - 1) * state.pageSize + 1 : 1;
+            const end = state.pageSize ? Math.min(state.page * state.pageSize, state.filtered.length) : state.filtered.length;
+            $('pageInfo').textContent = `Showing ${start.toLocaleString()}–${end.toLocaleString()} of ${state.filtered.length.toLocaleString()}`;
+            $('prevPage').disabled = state.page <= 1;
+            $('nextPage').disabled = state.page >= pages;
+        }
+
+        function syncSelectAll() {
+            const pageFiles = currentPageFiles();
+            const selectedOnPage = pageFiles.filter(f => state.selected.has(f.fileId)).length;
+            const selectAll = $('selectAll');
+            selectAll.checked = pageFiles.length > 0 && selectedOnPage === pageFiles.length;
+            selectAll.indeterminate = selectedOnPage > 0 && selectedOnPage < pageFiles.length;
+            selectAll.disabled = pageFiles.length === 0;
+        }
+
+        function updateSelectionUI() {
+            document.querySelectorAll('#filesContainer .file-row[data-id]').forEach(row => {
+                const selected = state.selected.has(row.dataset.id);
+                row.classList.toggle('selected', selected);
+                const cb = row.querySelector('[data-action="select"]');
+                if (cb) cb.checked = selected;
+            });
+            renderSummary();
+            syncSelectAll();
+        }
+
+        // ---------- Actions ----------
+
+        function findFile(fileId) {
+            return state.files.find(f => f.fileId === fileId);
+        }
+
+        function removeFiles(ids) {
+            const removed = new Set(ids);
+            const removedSize = state.files.filter(f => removed.has(f.fileId)).reduce((s, f) => s + (f.fileSize || 0), 0);
+            state.files = state.files.filter(f => !removed.has(f.fileId));
+            for (const id of ids) state.selected.delete(id);
+            if (state.bucketSize != null) state.bucketSize = Math.max(0, state.bucketSize - removedSize);
+            updateStats();
+            applyFilters();
+        }
+
+        async function copyLink(fileId) {
+            const url = shareUrl(fileId);
+            try {
+                await navigator.clipboard.writeText(url);
+                toast('Share link copied');
+            } catch {
+                window.prompt('Copy this link:', url);
+            }
+        }
+
+        async function downloadFile(fileId, button) {
+            const file = findFile(fileId);
+            const fileName = file?.originalName || 'file';
+            if (button) button.disabled = true;
+            try {
+                // The admin endpoint either redirects to a signed URL or returns { downloadUrl }.
+                // A cross-origin redirect is opaque to fetch, so we read the JSON form when we can.
+                const response = await api(`/f/admin/download/${encodeURIComponent(fileId)}`, {
+                    method: 'GET',
+                    redirect: 'manual'
+                });
+
+                let downloadUrl = null;
+                if (response.ok) {
+                    const result = await response.json().catch(() => ({}));
+                    downloadUrl = result.downloadUrl || null;
+                } else if (response.status >= 300 && response.status < 400) {
+                    downloadUrl = response.headers.get('Location');
+                }
+
+                if (downloadUrl) {
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = fileName;
+                    a.rel = 'noopener';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    toast(`Download started: ${fileName}`);
+                    return;
+                }
+
+                // Fall back to the public share page, which serves the file
+                window.open(shareUrl(fileId), '_blank', 'noopener');
+                toast('Opened share page to download', 'info');
+            } catch (error) {
+                if (error instanceof AuthError) return logout();
+                console.error('Download error:', error);
+                toast(`Download failed: ${error.message}`, 'error');
+            } finally {
+                if (button) button.disabled = false;
+            }
+        }
+
+        async function deleteOne(fileId) {
+            const file = findFile(fileId);
+            const name = file?.originalName || fileId;
+            const confirmed = await confirmDialog({
+                title: 'Delete file?',
+                message: `"${name}" will be permanently removed from storage and the database. Anyone with the share link will lose access. This cannot be undone.`,
+                onConfirm: async () => {
+                    try {
+                        await deleteFileRequest(fileId);
+                        removeFiles([fileId]);
+                        toast(`Deleted ${name}`);
+                    } catch (error) {
+                        if (error instanceof AuthError) return logout();
+                        console.error('Delete error:', error);
+                        toast(`Could not delete ${name}: ${error.message}`, 'error', 6000);
+                    }
+                }
+            });
+            return confirmed;
+        }
+
+        async function deleteSelected() {
+            const ids = [...state.selected];
+            if (!ids.length) return;
+            const size = state.files.filter(f => state.selected.has(f.fileId)).reduce((s, f) => s + (f.fileSize || 0), 0);
+
+            await confirmDialog({
+                title: `Delete ${ids.length.toLocaleString()} file${ids.length === 1 ? '' : 's'}?`,
+                message: `${formatFileSize(size)} will be permanently removed. Share links for these files will stop working. This cannot be undone.`,
+                confirmLabel: `Delete ${ids.length.toLocaleString()}`,
+                onConfirm: async (setProgress) => {
+                    const deleted = [];
+                    const failed = [];
+                    let done = 0;
+                    let authFailed = false;
+                    const queue = [...ids];
+
+                    // Run a few deletes in parallel instead of one at a time
+                    const worker = async () => {
+                        while (queue.length && !authFailed) {
+                            const id = queue.shift();
+                            try {
+                                await deleteFileRequest(id);
+                                deleted.push(id);
+                            } catch (error) {
+                                if (error instanceof AuthError) authFailed = true;
+                                failed.push(id);
+                                console.error(`Failed to delete ${id}:`, error);
+                            }
+                            setProgress(++done / ids.length);
+                        }
+                    };
+                    await Promise.all(Array.from({ length: Math.min(CONFIG.DELETE_CONCURRENCY, ids.length) }, worker));
+
+                    removeFiles(deleted);
+                    if (authFailed) return logout();
+                    if (failed.length === 0) {
+                        toast(`Deleted ${deleted.length.toLocaleString()} file${deleted.length === 1 ? '' : 's'}`);
+                    } else {
+                        // Leave the failures selected so they can be retried
+                        toast(`Deleted ${deleted.length}, ${failed.length} failed. Failed files are still selected.`, 'error', 7000);
+                    }
+                }
+            });
+        }
+
+        function exportCsv() {
+            const rows = [['File ID', 'Name', 'Content type', 'Category', 'Size (bytes)', 'Downloads', 'Uploaded']];
+            for (const f of state.filtered) {
+                rows.push([f.fileId, f.originalName || '', f.contentType || '', getFileCategory(f.contentType),
+                    f.fileSize || 0, f.downloadCount || 0, f.uploadDate || '']);
+            }
+            const csv = rows.map(r => r.map(v => {
+                let s = String(v);
+                // Neutralise spreadsheet formula injection from uploaded file names
+                if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+                return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+            }).join(',')).join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dashfiles-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            toast(`Exported ${state.filtered.length.toLocaleString()} files`);
+        }
+
+        // ---------- Theme ----------
+
+        function applyTheme(theme) {
+            if (theme) document.documentElement.dataset.theme = theme;
+            else delete document.documentElement.dataset.theme;
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.dataset.theme ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            try { localStorage.setItem(CONFIG.THEME_KEY, next); } catch { /* ignore */ }
+        }
+
+        // ---------- Event wiring ----------
+
+        function setupEventListeners() {
+            $('loginForm').addEventListener('submit', handleLogin);
+            $('logoutButton').addEventListener('click', logout);
+            $('refreshButton').addEventListener('click', () => refreshData());
+            $('themeButton').addEventListener('click', toggleTheme);
+            $('exportButton').addEventListener('click', exportCsv);
+            $('deleteSelectedButton').addEventListener('click', deleteSelected);
+            $('clearSelectionButton').addEventListener('click', () => { state.selected.clear(); updateSelectionUI(); });
+
+            $('searchInput').addEventListener('input', debounce(() => applyFilters({ resetPage: true }), 150));
+            $('typeFilter').addEventListener('change', () => applyFilters({ resetPage: true }));
+            $('dateFilter').addEventListener('change', () => applyFilters({ resetPage: true }));
+
+            $('pageSize').addEventListener('change', (e) => {
+                state.pageSize = Number(e.target.value);
+                state.page = 1;
+                renderFiles();
+            });
+            $('prevPage').addEventListener('click', () => { state.page--; renderFiles(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+            $('nextPage').addEventListener('click', () => { state.page++; renderFiles(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+            document.querySelectorAll('.sortable-header').forEach(btn =>
+                btn.addEventListener('click', () => setSort(btn.dataset.sort)));
+
+            $('selectAll').addEventListener('change', (e) => {
+                for (const f of currentPageFiles()) {
+                    if (e.target.checked) state.selected.add(f.fileId);
+                    else state.selected.delete(f.fileId);
+                }
+                updateSelectionUI();
+            });
+
+            $('breakdownLegend').addEventListener('click', (e) => {
+                const item = e.target.closest('[data-filter-type]');
+                if (!item) return;
+                const type = item.dataset.filterType;
+                $('typeFilter').value = $('typeFilter').value === type ? '' : type;
+                applyFilters({ resetPage: true });
+            });
+
+            // Delegated handlers for row actions, summary links and empty/error states
+            document.querySelector('.table-wrap').addEventListener('click', (e) => {
+                const target = e.target.closest('[data-action]');
+                if (!target) return;
+                const action = target.dataset.action;
+                const row = target.closest('.file-row[data-id]');
+                const fileId = row?.dataset.id;
+
+                switch (action) {
+                    case 'select':
+                        if (target.checked) state.selected.add(fileId);
+                        else state.selected.delete(fileId);
+                        updateSelectionUI();
+                        break;
+                    case 'view': window.open(shareUrl(fileId), '_blank', 'noopener'); break;
+                    case 'copy': copyLink(fileId); break;
+                    case 'download': downloadFile(fileId, target); break;
+                    case 'delete': deleteOne(fileId); break;
+                    case 'clear-filters': clearFilters(); break;
+                    case 'retry': refreshData(); break;
+                    case 'select-all-filtered':
+                        state.filtered.forEach(f => state.selected.add(f.fileId));
+                        updateSelectionUI();
+                        break;
+                }
+            });
+
+            // Shift-click a checkbox to select a range on the current page
+            let lastChecked = null;
+            $('filesContainer').addEventListener('click', (e) => {
+                const cb = e.target.closest('[data-action="select"]');
+                if (!cb) return;
+                const boxes = [...$('filesContainer').querySelectorAll('[data-action="select"]')];
+                if (e.shiftKey && lastChecked && boxes.includes(lastChecked)) {
+                    const [a, b] = [boxes.indexOf(lastChecked), boxes.indexOf(cb)].sort((x, y) => x - y);
+                    for (const box of boxes.slice(a, b + 1)) {
+                        const id = box.closest('.file-row').dataset.id;
+                        if (cb.checked) state.selected.add(id); else state.selected.delete(id);
+                    }
+                    updateSelectionUI();
+                }
+                lastChecked = cb;
+            });
+
+            // Keyboard shortcuts: "/" focuses search, "r" refreshes, Esc clears search/selection
+            document.addEventListener('keydown', (e) => {
+                if ($('adminContent').hidden || document.querySelector('.modal-backdrop')) return;
+                const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName) &&
+                    document.activeElement.type !== 'checkbox';
+                if (e.key === '/' && !typing) {
+                    e.preventDefault();
+                    $('searchInput').focus();
+                } else if (e.key.toLowerCase() === 'r' && !typing && !e.metaKey && !e.ctrlKey) {
+                    refreshData();
+                } else if (e.key === 'Escape') {
+                    if (document.activeElement === $('searchInput') && $('searchInput').value) {
+                        $('searchInput').value = '';
+                        applyFilters({ resetPage: true });
+                    } else if (state.selected.size) {
+                        state.selected.clear();
+                        updateSelectionUI();
+                    }
+                }
+            });
+        }
+
+        // ---------- Init ----------
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try { applyTheme(localStorage.getItem(CONFIG.THEME_KEY)); } catch { /* ignore */ }
+            setupEventListeners();
+            updateSortIndicators();
+
+            const stored = readStoredPassword();
+            if (!stored) return showLogin();
+
+            state.password = stored;
+            showDashboard();
+            await refreshData({ silent: true });
+        });
+    </script>
+</body>
+</html>
