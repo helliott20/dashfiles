@@ -611,8 +611,11 @@
 
         .file-name-text { min-width: 0; }
 
+        .file-name-text { display: flex; flex-wrap: wrap; align-items: baseline; }
+        .file-name-text .file-id { flex-basis: 100%; }
         .file-name-text strong {
             display: block;
+            max-width: 100%;
             font-weight: 500;
             font-size: 0.875rem;
             overflow: hidden;
@@ -629,6 +632,41 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        .badge-missing, .badge-uploading {
+            display: inline-block;
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            vertical-align: 1px;
+        }
+        .badge-missing { background: var(--danger-light); color: var(--danger); }
+        .badge-uploading { background: var(--primary-light); color: var(--primary); }
+        .file-row.missing .file-icon { opacity: 0.45; }
+        .file-row.missing .file-name-text strong { color: var(--text-secondary); }
+
+        .missing-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: var(--danger-light);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--text-primary);
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+        }
+        .missing-banner strong { color: var(--danger); }
+        .missing-banner p { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 2px; }
+        .missing-banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .missing-banner-actions .btn { padding: 8px 12px; font-size: 0.8125rem; }
 
         .file-type {
             font-size: 0.6875rem;
@@ -956,6 +994,10 @@
             .modal-actions { flex-direction: column-reverse; }
             .modal-actions .btn { justify-content: center; min-height: 48px; font-size: 1rem; }
 
+            .missing-banner { margin-bottom: 8px; padding: 12px; }
+            .missing-banner-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+            .missing-banner-actions .btn { justify-content: center; min-height: 44px; }
+
             .toasts { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); align-items: stretch; }
             body.has-selection .toasts { bottom: calc(84px + env(safe-area-inset-bottom)); }
             .toast { min-width: 0; }
@@ -1086,6 +1128,18 @@
             </section>
 
             <!-- Controls -->
+            <!-- Files whose data is gone from storage (needs the admin API to report `missing`) -->
+            <section class="missing-banner" id="missingBanner" hidden role="status">
+                <div>
+                    <strong id="missingCount"></strong>
+                    <p>Their records still exist but the file data isn't in storage, so share links show an S3 "NoSuchKey" error. They can't be recovered.</p>
+                </div>
+                <div class="missing-banner-actions">
+                    <button class="btn btn-ghost" id="toggleMissingButton">Show only these</button>
+                    <button class="btn btn-danger" id="selectMissingButton">Select all to delete</button>
+                </div>
+            </section>
+
             <section class="controls" aria-label="Filters">
                 <div class="search-wrap">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1212,6 +1266,7 @@
             page: 1,
             pageSize: 50,
             bucketSize: null,
+            onlyMissing: false,
             loading: false
         };
 
@@ -1270,6 +1325,33 @@
         function getExtension(name) {
             const match = /\.([a-z0-9]{1,5})$/i.exec(name || '');
             return match ? match[1] : null;
+        }
+
+        // Uploads go straight from the browser to S3 after the record is created, so a
+        // very recent record without an object is most likely still uploading.
+        const UPLOAD_GRACE_MS = 15 * 60 * 1000;
+
+        function objectMissing(file) {
+            return file.missing === true || file.objectExists === false;
+        }
+
+        function isUploading(file) {
+            return objectMissing(file) && file.uploadDate &&
+                Date.now() - new Date(file.uploadDate).getTime() < UPLOAD_GRACE_MS;
+        }
+
+        function isMissing(file) {
+            return objectMissing(file) && !isUploading(file);
+        }
+
+        // Returns true (and explains) when an action can't work because the data is gone
+        function blockIfMissing(fileId) {
+            const file = findFile(fileId);
+            if (!file || !objectMissing(file)) return false;
+            toast(isUploading(file)
+                ? 'This file is still uploading. Try again in a few minutes.'
+                : 'This file is missing from storage, so there is nothing to open. Delete it to clean up.', 'error', 5000);
+            return true;
         }
 
         function shareUrl(fileId) {
@@ -1382,6 +1464,7 @@
                         <dt>Downloads</dt><dd>${(file.downloadCount || 0).toLocaleString()}</dd>
                         <dt>Uploaded</dt><dd>${escapeHtml(formatDate(file.uploadDate))}</dd>
                         <dt>File ID</dt><dd><code>${escapeHtml(file.fileId)}</code></dd>
+                        ${objectMissing(file) ? `<dt>Status</dt><dd>${isUploading(file) ? 'Still uploading' : '<strong style="color:var(--danger)">Missing from storage</strong>'}</dd>` : ''}
                     </dl>
                     <div class="sheet-actions">
                         <button class="btn btn-ghost" data-sheet="view">${ICONS.view} Open</button>
@@ -1409,7 +1492,7 @@
                 const action = btn.dataset.sheet;
                 close();
                 switch (action) {
-                    case 'view': window.open(shareUrl(fileId), '_blank', 'noopener'); break;
+                    case 'view': openShare(fileId); break;
                     case 'copy': copyLink(fileId); break;
                     case 'download': downloadFile(fileId); break;
                     case 'delete': deleteOne(fileId); break;
@@ -1597,6 +1680,15 @@
             $('todayUploadsSub').textContent = `${week.length.toLocaleString()} in the last 7 days · ${formatFileSize(today.reduce((s, f) => s + (f.fileSize || 0), 0))} today`;
 
             renderBreakdown(totalSize);
+            renderMissingBanner();
+        }
+
+        function renderMissingBanner() {
+            const missing = state.files.filter(isMissing);
+            if (!missing.length) state.onlyMissing = false;
+            $('missingBanner').hidden = missing.length === 0;
+            $('missingCount').textContent = `${missing.length.toLocaleString()} file${missing.length === 1 ? ' is' : 's are'} missing from storage`;
+            $('toggleMissingButton').textContent = state.onlyMissing ? 'Show all files' : 'Show only these';
         }
 
         function renderBreakdown(totalSize) {
@@ -1665,7 +1757,8 @@
             state.filtered = sortFiles(state.files.filter(f =>
                 (!term || (f.originalName || '').toLowerCase().includes(term) || (f.fileId || '').toLowerCase().includes(term)) &&
                 (!type || getFileCategory(f.contentType) === type) &&
-                matchesDate(f.uploadDate, date)
+                matchesDate(f.uploadDate, date) &&
+                (!state.onlyMissing || isMissing(f))
             ));
 
             if (resetPage) state.page = 1;
@@ -1685,13 +1778,15 @@
         }
 
         function hasActiveFilters() {
-            return Boolean($('searchInput').value.trim() || $('typeFilter').value || $('dateFilter').value);
+            return Boolean($('searchInput').value.trim() || $('typeFilter').value || $('dateFilter').value || state.onlyMissing);
         }
 
         function clearFilters() {
             $('searchInput').value = '';
             $('typeFilter').value = '';
             $('dateFilter').value = '';
+            state.onlyMissing = false;
+            renderMissingBanner();
             applyFilters({ resetPage: true });
         }
 
@@ -1779,12 +1874,14 @@
             const downloads = (file.downloadCount || 0).toLocaleString();
 
             return `
-                <div class="row-grid file-row${selected ? ' selected' : ''}" data-id="${id}">
+                <div class="row-grid file-row${selected ? ' selected' : ''}${isMissing(file) ? ' missing' : ''}" data-id="${id}">
                     <input type="checkbox" class="checkbox" data-action="select" ${selected ? 'checked' : ''} aria-label="Select ${name}">
                     <div class="file-name">
                         <div class="file-icon bg-${category}" aria-hidden="true">${iconText}</div>
                         <div class="file-name-text">
                             <strong title="${name}">${name}</strong>
+                            ${isMissing(file) ? '<span class="badge-missing" title="File data is missing from storage">Missing</span>'
+                                : isUploading(file) ? '<span class="badge-uploading" title="Uploaded moments ago; data not in storage yet">Uploading</span>' : ''}
                             <span class="file-id" title="${escapeHtml(file.contentType || '')}">${id}</span>
                         </div>
                     </div>
@@ -1885,7 +1982,13 @@
             applyFilters();
         }
 
+        function openShare(fileId) {
+            if (blockIfMissing(fileId)) return;
+            window.open(shareUrl(fileId), '_blank', 'noopener');
+        }
+
         async function copyLink(fileId) {
+            if (blockIfMissing(fileId)) return;
             const url = shareUrl(fileId);
             try {
                 await navigator.clipboard.writeText(url);
@@ -1896,6 +1999,7 @@
         }
 
         async function downloadFile(fileId, button) {
+            if (blockIfMissing(fileId)) return;
             const file = findFile(fileId);
             const fileName = file?.originalName || 'file';
             if (button) button.disabled = true;
@@ -2006,10 +2110,11 @@
         }
 
         function exportCsv() {
-            const rows = [['File ID', 'Name', 'Content type', 'Category', 'Size (bytes)', 'Downloads', 'Uploaded']];
+            const rows = [['File ID', 'Name', 'Content type', 'Category', 'Size (bytes)', 'Downloads', 'Uploaded', 'Status']];
             for (const f of state.filtered) {
                 rows.push([f.fileId, f.originalName || '', f.contentType || '', getFileCategory(f.contentType),
-                    f.fileSize || 0, f.downloadCount || 0, f.uploadDate || '']);
+                    f.fileSize || 0, f.downloadCount || 0, f.uploadDate || '',
+                    isMissing(f) ? 'missing' : isUploading(f) ? 'uploading' : ('missing' in f || 'objectExists' in f) ? 'ok' : '']);
             }
             const csv = rows.map(r => r.map(v => {
                 let s = String(v);
@@ -2070,6 +2175,18 @@
             document.querySelectorAll('.sortable-header').forEach(btn =>
                 btn.addEventListener('click', () => setSort(btn.dataset.sort)));
 
+            $('toggleMissingButton').addEventListener('click', () => {
+                state.onlyMissing = !state.onlyMissing;
+                renderMissingBanner();
+                applyFilters({ resetPage: true });
+            });
+            $('selectMissingButton').addEventListener('click', () => {
+                state.selected.clear();
+                state.files.filter(isMissing).forEach(f => state.selected.add(f.fileId));
+                updateSelectionUI();
+                deleteSelected();
+            });
+
             $('mobileSort').addEventListener('change', (e) => {
                 const [field, direction] = e.target.value.split(':');
                 state.sort = { field, direction };
@@ -2112,7 +2229,7 @@
                         else state.selected.delete(fileId);
                         updateSelectionUI();
                         break;
-                    case 'view': window.open(shareUrl(fileId), '_blank', 'noopener'); break;
+                    case 'view': openShare(fileId); break;
                     case 'copy': copyLink(fileId); break;
                     case 'download': downloadFile(fileId, target); break;
                     case 'delete': deleteOne(fileId); break;

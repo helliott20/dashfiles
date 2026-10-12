@@ -2466,7 +2466,127 @@
             }
         }
 
+
+        /* ===== Refinements ===== */
+
+        /* Snappier entrance: everything is in place within ~0.6s */
+        .container { animation-duration: 0.5s; }
+        .logo { animation-duration: 0.6s; animation-delay: 0s; }
+        .logo p { animation-duration: 0.5s; animation-delay: 0.1s; }
+        .upload-zone { animation-duration: 0.5s; animation-delay: 0.1s; }
+        .upload-text { animation-duration: 0.5s; animation-delay: 0.15s; }
+        .disclaimer { animation-duration: 0.5s; animation-delay: 0.2s; }
+        .footer { animation-duration: 0.5s; animation-delay: 0.25s; }
+
+        /* Theme toggle sits in the card's corner instead of floating over the logo */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            animation: themeButtonEntrance 0.4s ease-out 0.1s both;
+        }
+        .theme-toggle .theme-indicator, .theme-toggle .theme-icon { width: 20px; height: 20px; }
+
+        .upload-hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        /* Upload progress details */
+        .upload-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            padding: 14px 16px;
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            background: var(--bg-container);
+        }
+        .upload-status-text { flex: 1; min-width: 0; }
+        .upload-file-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .upload-stats {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+        .cancel-btn {
+            flex-shrink: 0;
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 40px;
+        }
+        .cancel-btn:hover { color: #dc2626; border-color: #fca5a5; }
+        .progress-container { margin-top: 0; margin-bottom: 12px; }
+        .loading { margin-top: 0; }
+
+        /* Success details and actions */
+        .result-file {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: -4px 0 12px;
+            overflow-wrap: anywhere;
+        }
+        .result-link { cursor: text; user-select: all; }
+        .result-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+        .result-actions .copy-btn { margin-right: 0; }
+        .copy-btn.secondary {
+            background: transparent;
+            color: var(--text-result, #059669);
+            border: 2px solid currentColor;
+        }
+
+        #qrcode img { image-rendering: pixelated; background: #fff; }
+        /* Collapsed drop zone otherwise leaves its dashed border behind as a stray line */
+        .upload-zone.hidden { border-width: 0; overflow: hidden; }
+
+        @media (max-width: 768px) {
+            /* Let the page scroll normally on phones rather than inside the card */
+            body { height: auto; overflow-y: auto; align-items: flex-start; }
+            .container { max-height: none; overflow: visible; }
+        }
+
+        @media (max-width: 480px) {
+            .theme-toggle { top: 14px; right: 14px; width: 40px; height: 40px; }
+            .result-actions .copy-btn { flex: 1 1 calc(50% - 5px); padding: 12px 10px; min-height: 48px; }
+            .result-actions .copy-btn.secondary { flex-basis: 100%; }
+            .upload-error-toast {
+                top: 12px !important;
+                left: 12px !important;
+                right: 12px !important;
+                max-width: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .floating-shape { display: none; }
+        }
     </style>
+    <!-- QR codes are generated in the browser so share links aren't sent to a third-party service -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 </head>
 <body>
     <!-- Hidden SEO content -->
@@ -2588,12 +2708,12 @@
             </div>
             <div class="upload-text">
                 <h2>Drop your file here</h2>
-                <p>or click to browse and select a file</p>
+                <p>or click to choose one<span class="upload-hint">You can also paste a file · up to 100 MB</span></p>
                 <button class="upload-btn" type="button">
                     Choose File
                 </button>
             </div>
-            <input type="file" id="fileInput" class="file-input" multiple aria-label="Select files to upload">
+            <input type="file" id="fileInput" class="file-input" aria-label="Select a file to upload">
         </section>
 
         <div class="progress-container" id="progressContainer" role="progressbar" aria-label="Upload progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
@@ -2602,9 +2722,14 @@
             </div>
         </div>
 
-        <div class="loading" id="loading" aria-live="polite">
-            <div class="spinner" aria-hidden="true"></div>
-            <p>Uploading your file...</p>
+        <div class="loading" id="loading">
+            <div class="upload-status">
+                <div class="upload-status-text">
+                    <div class="upload-file-name" id="uploadFileName"></div>
+                    <div class="upload-stats" id="uploadStats" aria-live="polite">Preparing upload…</div>
+                </div>
+                <button class="cancel-btn" id="cancelUpload" type="button">Cancel</button>
+            </div>
         </div>
 
         <section class="result-container" id="resultContainer" aria-live="polite">
@@ -2614,9 +2739,13 @@
                 </svg>
                 Upload Successful!
             </div>
+            <div class="result-file" id="resultFile"></div>
             <div class="result-link" id="resultLink" aria-label="File download link"></div>
-            <button class="copy-btn" onclick="copyToClipboard()" type="button">Copy Link</button>
-            <button class="copy-btn" onclick="resetUpload()" type="button">Upload Another</button>
+            <div class="result-actions">
+                <button class="copy-btn" onclick="copyToClipboard(this)" type="button">Copy Link</button>
+                <button class="copy-btn" id="shareBtn" onclick="shareLink()" type="button" hidden>Share</button>
+                <button class="copy-btn secondary" onclick="resetUpload()" type="button">Upload Another</button>
+            </div>
             
             <div class="qr-section" id="qrSection">
                 <div class="qr-title">
@@ -2763,8 +2892,13 @@ function checkCookieConsent() {
             }, 600);
         }
 
-        // GA4 is now initialized immediately in the head with consent mode
-        // No separate initialization function needed
+        // GA4 loads in the head with consent mode; this grants analytics storage
+        // once the visitor opts in (called from the cookie settings dialog)
+        function initializeAnalytics() {
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted'
+            });
+        }
 
 // Function to remove Google Analytics
 function removeAnalytics() {
@@ -2932,7 +3066,13 @@ function navigateToSuccess() {
         });
 
         // Theme Management with persistence
-        let currentTheme = localStorage.getItem('dashfiles-theme') || 'light';
+        let currentTheme = (() => {
+            try {
+                const saved = localStorage.getItem('dashfiles-theme');
+                if (saved) return saved;
+            } catch (e) { /* storage blocked */ }
+            return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        })();
         
         // Apply saved theme on load
         document.addEventListener('DOMContentLoaded', () => {
@@ -3083,12 +3223,64 @@ function navigateToSuccess() {
 
         uploadZone.addEventListener('drop', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             uploadZone.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 handleFileUpload(files[0]);
             }
         });
+
+        // Dropping a file anywhere on the page uploads it (instead of the browser
+        // navigating away to open the file)
+        window.addEventListener('dragover', (e) => {
+            if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) e.preventDefault();
+        });
+        window.addEventListener('drop', (e) => {
+            if (!e.dataTransfer || !e.dataTransfer.files.length) return;
+            e.preventDefault();
+            if (!uploadZone.classList.contains('hidden')) handleFileUpload(e.dataTransfer.files[0]);
+        });
+
+        // Paste a file (e.g. a screenshot) to upload it
+        document.addEventListener('paste', (e) => {
+            const file = e.clipboardData && e.clipboardData.files && e.clipboardData.files[0];
+            if (!file || uploadInProgress || uploadZone.classList.contains('hidden')) return;
+            e.preventDefault();
+            // Pasted screenshots are often called "image.png"; give them a useful name
+            const named = /^image\.(png|jpe?g|gif|webp)$/i.test(file.name)
+                ? new File([file], `pasted-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.${file.name.split('.').pop()}`, { type: file.type })
+                : file;
+            handleFileUpload(named);
+        });
+
+        document.getElementById('cancelUpload').addEventListener('click', () => {
+            uploadCancelled = true;
+            if (currentXhr) currentXhr.abort();
+        });
+
+        if (navigator.share) document.getElementById('shareBtn').hidden = false;
+
+        function formatBytes(bytes) {
+            if (!bytes) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+            return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(i ? 1 : 0))} ${units[i]}`;
+        }
+
+        function formatDuration(seconds) {
+            if (!isFinite(seconds) || seconds < 0) return '';
+            if (seconds < 60) return `${Math.max(1, Math.round(seconds))}s left`;
+            return `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s left`;
+        }
+
+        function returnToIdle() {
+            loading.style.display = 'none';
+            progressContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+            uploadZone.classList.remove('hidden');
+            fileInput.value = '';
+        }
 
         uploadZone.addEventListener('click', () => {
             fileInput.click();
@@ -3147,6 +3339,10 @@ function navigateToSuccess() {
         // Enhanced file upload function with better error handling and MIME type detection
         // Store last failed file for retry functionality
         let lastFailedFile = null;
+        let uploadInProgress = false;
+        let uploadCancelled = false;
+        let currentXhr = null;
+        let currentFile = null;
 
         function retryLastUpload() {
             if (lastFailedFile) {
@@ -3157,6 +3353,7 @@ function navigateToSuccess() {
         }
 
         async function handleFileUpload(file) {
+            if (uploadInProgress) return;
             // Store file for potential retry
             lastFailedFile = file;
             console.log('Starting file upload:', { name: file.name, size: file.size, type: file.type });
@@ -3189,6 +3386,13 @@ function navigateToSuccess() {
             });
 
             // Show loading state
+            uploadInProgress = true;
+            uploadCancelled = false;
+            currentFile = file;
+            document.querySelectorAll('.upload-error-toast').forEach(e => e.remove());
+            document.getElementById('uploadFileName').textContent = file.name;
+            document.getElementById('uploadStats').textContent = `Preparing upload · ${formatBytes(file.size)}`;
+            uploadZone.classList.add('hidden');
             loading.style.display = 'block';
             progressContainer.style.display = 'block';
             resultContainer.style.display = 'none';
@@ -3239,11 +3443,18 @@ function navigateToSuccess() {
                     throw new Error(data.error || 'Invalid server response');
                 }
                 
+                if (uploadCancelled) throw new Error('Upload was cancelled');
+
                 // Upload to S3
                 console.log('Starting S3 upload...');
                 await uploadToS3(file, data.presignedUrl, data.shareUrl, fileType);
                 
             } catch (error) {
+                if (uploadCancelled) {
+                    returnToIdle();
+                    trackEvent('file_upload_cancelled', { event_category: 'engagement', file_size: file.size });
+                    return;
+                }
                 console.error('Upload error:', error);
                 
                 let errorMessage = 'Upload failed. Please try again.';
@@ -3258,6 +3469,7 @@ function navigateToSuccess() {
                 }
                 
                 showError(errorMessage);
+                uploadZone.classList.remove('hidden');
                 
                 trackEvent('file_upload_error', {
                     event_category: 'errors',
@@ -3266,6 +3478,9 @@ function navigateToSuccess() {
                     file_size: file.size,
                     file_type: fileType
                 });
+            } finally {
+                uploadInProgress = false;
+                currentXhr = null;
             }
         }       
 
@@ -3273,13 +3488,31 @@ function navigateToSuccess() {
         async function uploadToS3(file, presignedUrl, shareUrl, contentType) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.timeout = 120000; // 2 minutes (reduced from 5 for better UX)
+                currentXhr = xhr;
+                const startedAt = Date.now();
+                // Scale the timeout with file size (assume at least ~50 KB/s, minimum 5 minutes).
+                // A fixed 2 minutes cut off large uploads on slower connections, leaving
+                // records whose file never reached storage.
+                xhr.timeout = Math.max(5 * 60 * 1000, Math.ceil(file.size / (50 * 1024)) * 1000);
+
+                // Warn before leaving mid-upload, which would also strand the record
+                const warnOnLeave = (e) => { e.preventDefault(); e.returnValue = ''; };
+                window.addEventListener('beforeunload', warnOnLeave);
+                const stopWarning = () => window.removeEventListener('beforeunload', warnOnLeave);
+                xhr.addEventListener('loadend', stopWarning);
                 
                 // Track upload progress
                 xhr.upload.addEventListener('progress', (e) => {
                     if (e.lengthComputable) {
                         const percentComplete = Math.round((e.loaded / e.total) * 100);
                         progressFill.style.width = percentComplete + '%';
+
+                        const elapsed = (Date.now() - startedAt) / 1000;
+                        const speed = elapsed > 0.5 ? e.loaded / elapsed : 0;
+                        const parts = [`${percentComplete}%`, `${formatBytes(e.loaded)} of ${formatBytes(e.total)}`];
+                        if (speed && percentComplete < 100) parts.push(`${formatBytes(speed)}/s`, formatDuration((e.total - e.loaded) / speed));
+                        if (percentComplete === 100) parts.splice(1, 1, 'Finishing…');
+                        document.getElementById('uploadStats').textContent = parts.filter(Boolean).join(' · ');
 
                         // Update ARIA attributes for screen readers
                         progressContainer.setAttribute('aria-valuenow', percentComplete);
@@ -3301,6 +3534,7 @@ function navigateToSuccess() {
                             loading.style.display = 'none';
                             progressContainer.style.display = 'none';
                             resultLink.textContent = shareUrl;
+                            document.getElementById('resultFile').textContent = `${file.name} · ${formatBytes(file.size)}`;
                             resultContainer.style.display = 'block';
                             
                             setTimeout(() => {
@@ -3344,6 +3578,7 @@ function navigateToSuccess() {
                     xhr.send(file);
                     
                 } catch (sendError) {
+                    stopWarning();
                     console.error('Error starting S3 upload:', sendError);
                     reject(new Error('Failed to start upload'));
                 }
@@ -3439,10 +3674,34 @@ function navigateToSuccess() {
         }
 
         // Updated copy link tracking
-function copyToClipboard() {
+// Clipboard API needs a secure context; fall back to a hidden textarea
+function writeClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        ok ? resolve() : reject(new Error('Copy failed'));
+    });
+}
+
+async function shareLink() {
+    const url = resultLink.textContent;
+    try {
+        await navigator.share({ title: currentFile ? currentFile.name : 'DashFiles', text: 'Download my file', url });
+        trackEvent('link_shared', { event_category: 'engagement' });
+    } catch (e) { /* user dismissed the share sheet */ }
+}
+
+function copyToClipboard(button) {
     const link = resultLink.textContent;
-    navigator.clipboard.writeText(link).then(() => {
-        const btn = event.target;
+    writeClipboard(link).then(() => {
+        const btn = button || document.querySelector('.result-actions .copy-btn');
         const originalText = btn.textContent;
         btn.textContent = 'Copied!';
         btn.style.background = 'linear-gradient(135deg, #059669, #047857)';
@@ -3459,6 +3718,13 @@ function copyToClipboard() {
             btn.textContent = originalText;
             btn.style.background = '';
         }, 2000);
+    }).catch(() => {
+        // Last resort: select the link so it can be copied by hand
+        const range = document.createRange();
+        range.selectNodeContents(resultLink);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
     });
 }
 
@@ -3549,6 +3815,8 @@ function copyToClipboard() {
             progressFill.style.width = '0%';
             fileInput.value = '';
             
+            document.getElementById('resultFile').textContent = '';
+
             // Reset URL back to home
             const currentUrl = new URL(window.location.href);
             currentUrl.pathname = '/';
@@ -3579,13 +3847,18 @@ function copyToClipboard() {
             qrElement.innerHTML = '';
             
             try {
-                // Get appropriate colors for current theme
-                const isDark = currentTheme === 'dark';
-                const bgColor = isDark ? '1e2332' : 'ffffff';
-                const fgColor = isDark ? 'f8fafc' : '1f2937';
+                // Dark-on-white in both themes: inverted QR codes don't scan on many phones.
+                // Generated in the browser; the remote API is only a fallback if the library didn't load.
                 
-                // Create QR code with theme-appropriate colors
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&bgcolor=${bgColor}&color=${fgColor}&margin=10&format=png`;
+                let qrUrl;
+                if (typeof qrcode === 'function') {
+                    const qr = qrcode(0, 'M');
+                    qr.addData(url);
+                    qr.make();
+                    qrUrl = qr.createDataURL(6, 2);
+                } else {
+                    qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=1f2937&margin=10&format=png`;
+                }
                 
                 // Create image element
                 const img = document.createElement('img');
@@ -3610,7 +3883,8 @@ function copyToClipboard() {
                 
                 // Handle error
                 img.onerror = () => {
-                    throw new Error('Failed to generate QR code');
+                    console.error('QR code image failed to load');
+                    qrBuilding.textContent = 'QR code unavailable. Use the link above.';
                 };
                 
             } catch (error) {
@@ -3772,14 +4046,6 @@ function copyToClipboard() {
             }
         });
 
-        // Add loading screen effect
-        window.addEventListener('load', () => {
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                document.body.style.transition = 'opacity 0.8s ease-out';
-                document.body.style.opacity = '1';
-            }, 100);
-        });
 
     // Console helper functions for easy management
 window.AnalyticsManager = {
